@@ -1,0 +1,315 @@
+﻿@model Shoping_webapplication_project_.ViewModels.AdminOrderDetailsViewModel
+
+@{
+    ViewBag.Title = "Order Details";
+    Layout = "~/Views/Shared/LoginLayout.cshtml";
+}
+
+<div class="order-details-page">
+
+    <div class="page-header">
+        <div>
+            <h1>Order Details</h1>
+            <p>View complete information about this order.</p>
+        </div>
+
+        <a href="@Url.Action("Orders", "Admin")" class="back-btn">
+            ← Back to Orders
+        </a>
+    </div>
+
+    <div class="order-card">
+
+        <div class="order-header">
+            <div>
+                <h2>@Model.OrderNumber</h2>
+                <p>
+                    Order Date:
+                    @Model.OrderDate.ToString("dd MMM yyyy hh:mm tt")
+                </p>
+            </div>
+
+            <div class="status-management">
+
+                <span class="status @Model.Status.ToLower()">
+                    @Model.Status
+                </span>
+
+                <form method="post"
+                      action="@Url.Action("UpdateOrderStatus", "Admin")"
+                      class="status-update-form">
+
+                    <input type="hidden"
+                           name="id"
+                           value="@Model.OrderId" />
+                    <select name="status" class="status-select">
+
+                        <option value="Pending"
+                                @(Model.Status == "Pending" ? "selected" : "")>
+                            Pending
+                        </option>
+
+                        <option value="Processing"
+                                @(Model.Status == "Processing" ? "selected" : "")>
+                            Processing
+                        </option>
+
+                        <option value="Shipped"
+                                @(Model.Status == "Shipped" ? "selected" : "")>
+                            Shipped
+                        </option>
+
+                        <option value="Delivered"
+                                @(Model.Status == "Delivered" ? "selected" : "")>
+                            Delivered
+                        </option>
+
+                    </select>
+
+                    <button type="submit" class="update-status-btn">
+                        Update
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+
+        <div class="customer-section">
+            <h3>Customer Information</h3>
+
+            <p>
+                <strong>Name:</strong>
+                @Model.CustomerName
+            </p>
+
+            <p>
+                <strong>Email:</strong>
+                @Model.CustomerEmail
+            </p>
+        </div>
+
+        <div class="items-section">
+
+            <h3>Order Items</h3>
+
+            <table class="items-table">
+
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td>@item.ProductName</td>
+
+                            <td>@item.Quantity</td>
+
+                            <td>
+                                ₹@item.UnitPrice.ToString("N2")
+                            </td>
+
+                            <td>
+                                ₹@item.TotalPrice.ToString("N2")
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="total-section">
+            <strong>Order Total</strong>
+
+            <span>
+                ₹@Model.TotalAmount.ToString("N2")
+            </span>
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+
+    .order-details-page {
+        padding: 30px;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .page-header p {
+            margin-top: 6px;
+            color: #777;
+        }
+
+    .back-btn {
+        background: #111;
+        color: white;
+        padding: 11px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+    }
+
+    .order-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 20px rgba(0,0,0,.08);
+    }
+
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 20px;
+    }
+
+        .order-header h2 {
+            margin: 0;
+            color: #111;
+        }
+
+        .order-header p {
+            color: #777;
+            margin-top: 7px;
+        }
+
+    .status {
+        padding: 7px 14px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .pending {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .processing {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .shipped {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .delivered {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .customer-section {
+        padding: 25px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+        .customer-section h3,
+        .items-section h3 {
+            margin-bottom: 15px;
+        }
+
+        .customer-section p {
+            margin: 8px 0;
+            color: #555;
+        }
+
+    .items-section {
+        padding-top: 25px;
+    }
+
+    .items-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+        .items-table th,
+        .items-table td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .items-table th {
+            background: #111;
+            color: white;
+        }
+
+    .total-section {
+        display: flex;
+        justify-content: flex-end;
+        gap: 40px;
+        font-size: 20px;
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 2px solid #111;
+    }
+
+    .status-management {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .status-update-form {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    }
+
+    .status-select {
+        padding: 7px 10px;
+        border: 1px solid #ddd;
+        border-radius: 7px;
+        background: #fff;
+        color: #333;
+        font-size: 13px;
+        outline: none;
+    }
+
+        .status-select:focus {
+            border-color: #e11d48;
+        }
+
+    .update-status-btn {
+        background: #e11d48;
+        color: #fff;
+        border: none;
+        padding: 7px 13px;
+        border-radius: 7px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+        .update-status-btn:hover {
+            background: #be123c;
+        }
+</style>

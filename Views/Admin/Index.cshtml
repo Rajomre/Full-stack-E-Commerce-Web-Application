@@ -1,0 +1,1823 @@
+﻿@{
+    ViewBag.Title = "Admin Dashboard";
+    Layout = "~/Views/Shared/LoginLayout.cshtml";
+}
+
+<style>
+
+    /* =========================================================
+       ROOT / GLOBAL
+    ========================================================= */
+
+    :root {
+        --red: #e50914;
+        --red-dark: #b8000b;
+        --red-light: rgba(229, 9, 20, 0.12);
+
+        --black: #070707;
+        --black-2: #101010;
+        --black-3: #171717;
+
+        --white: #ffffff;
+        --text: #171717;
+        --muted: #777;
+        --border: rgba(0,0,0,0.08);
+
+        --green: #16a34a;
+        --orange: #f59e0b;
+        --blue: #2563eb;
+
+        --glass-white: rgba(255,255,255,0.72);
+        --glass-dark: rgba(10,10,10,0.78);
+
+        --shadow:
+            0 15px 40px rgba(0,0,0,0.08);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background:
+            radial-gradient(
+                circle at 80% 10%,
+                rgba(229,9,20,0.07),
+                transparent 28%
+            ),
+            #f5f5f7;
+        color: var(--text);
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+
+    /* =========================================================
+       MAIN APP
+    ========================================================= */
+
+    .admin-dashboard {
+        min-height: 100vh;
+        display: flex;
+    }
+
+
+    /* =========================================================
+       SIDEBAR
+    ========================================================= */
+
+    .admin-sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+
+        width: 255px;
+
+        background:
+            radial-gradient(
+                circle at 20% 20%,
+                rgba(229,9,20,0.18),
+                transparent 30%
+            ),
+            linear-gradient(
+                145deg,
+                #050505,
+                #0d0d0d 55%,
+                #030303
+            );
+
+        color: white;
+
+        padding: 22px 15px;
+
+        z-index: 1000;
+
+        border-right: 1px solid rgba(255,255,255,0.07);
+
+        overflow-y: auto;
+    }
+
+    .admin-sidebar::before {
+        content: "";
+        position: absolute;
+
+        width: 180px;
+        height: 180px;
+
+        background: rgba(229,9,20,0.12);
+
+        filter: blur(60px);
+
+        right: -100px;
+        bottom: 80px;
+
+        pointer-events: none;
+    }
+
+
+    /* BRAND */
+
+    .brand {
+        display: flex;
+        align-items: center;
+
+        gap: 12px;
+
+        padding: 5px 9px 24px;
+
+        border-bottom:
+            1px solid rgba(255,255,255,0.08);
+
+        margin-bottom: 22px;
+    }
+
+    .brand-logo {
+        width: 43px;
+        height: 43px;
+
+        border-radius: 13px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background:
+            linear-gradient(
+                135deg,
+                var(--red),
+                #760007
+            );
+
+        color: white;
+
+        font-size: 16px;
+        font-weight: 800;
+
+        box-shadow:
+            0 0 25px rgba(229,9,20,0.35);
+    }
+
+    .brand-name {
+        color: white;
+
+        font-size: 16px;
+        font-weight: 750;
+    }
+
+    .brand-name span {
+        color: var(--red);
+    }
+
+    .brand-subtitle {
+        margin-top: 3px;
+
+        color: #858585;
+
+        font-size: 9px;
+
+        letter-spacing: 1.5px;
+    }
+
+
+    /* MENU */
+
+    .menu-title {
+        padding: 0 11px;
+
+        margin: 21px 0 8px;
+
+        color: #6d6d6d;
+
+        font-size: 9px;
+        font-weight: 700;
+
+        text-transform: uppercase;
+
+        letter-spacing: 1.4px;
+    }
+
+    .sidebar-menu {
+        list-style: none;
+
+        padding: 0;
+        margin: 0;
+    }
+
+    .sidebar-menu li {
+        margin-bottom: 4px;
+    }
+
+    .sidebar-menu a {
+        position: relative;
+
+        display: flex;
+        align-items: center;
+
+        gap: 12px;
+
+        padding: 11px 12px;
+
+        border-radius: 11px;
+
+        color: #bcbcbc;
+
+        font-size: 13px;
+
+        transition:
+            background .2s ease,
+            color .2s ease,
+            transform .2s ease;
+    }
+
+    .sidebar-menu a:hover {
+        background:
+            rgba(255,255,255,0.06);
+
+        color: white;
+
+        transform: translateX(2px);
+    }
+
+    .sidebar-menu a.active {
+        background:
+            linear-gradient(
+                100deg,
+                var(--red),
+                #b00009
+            );
+
+        color: white;
+
+        box-shadow:
+            0 8px 25px rgba(229,9,20,0.25);
+    }
+
+    .menu-icon {
+        width: 22px;
+
+        text-align: center;
+
+        font-size: 15px;
+    }
+
+
+    /* SIDEBAR LOGOUT */
+
+    .sidebar-bottom {
+        margin-top: 25px;
+        padding-top: 20px;
+
+        border-top:
+            1px solid rgba(255,255,255,0.08);
+    }
+
+    .logout-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 9px;
+
+        width: 100%;
+
+        padding: 11px;
+
+        border-radius: 11px;
+
+        border:
+            1px solid rgba(255,255,255,0.12);
+
+        background:
+            rgba(255,255,255,0.035);
+
+        color: #cfcfcf;
+
+        font-size: 12px;
+
+        transition: .2s ease;
+    }
+
+    .logout-btn:hover {
+        color: white;
+
+        background:
+            linear-gradient(
+                100deg,
+                var(--red),
+                var(--red-dark)
+            );
+
+        border-color: transparent;
+
+        box-shadow:
+            0 8px 25px rgba(229,9,20,0.25);
+    }
+
+
+    /* =========================================================
+       MAIN CONTENT
+    ========================================================= */
+
+    .dashboard-main {
+        width: calc(100% - 255px);
+
+        margin-left: 255px;
+
+        min-height: 100vh;
+    }
+
+
+    /* =========================================================
+       TOPBAR
+    ========================================================= */
+
+    .topbar {
+        height: 74px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 0 30px;
+
+        background:
+            rgba(255,255,255,0.78);
+
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+
+        border-bottom:
+            1px solid rgba(0,0,0,0.06);
+
+        position: sticky;
+        top: 0;
+
+        z-index: 500;
+    }
+
+    .page-title h1 {
+        margin: 0;
+
+        font-size: 20px;
+        font-weight: 750;
+    }
+
+    .page-title p {
+        margin: 3px 0 0;
+
+        color: var(--muted);
+
+        font-size: 11px;
+    }
+
+
+    /* ADMIN PROFILE */
+
+    .admin-profile {
+        display: flex;
+        align-items: center;
+
+        gap: 11px;
+    }
+
+    .notification {
+        width: 38px;
+        height: 38px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 11px;
+
+        background:
+            rgba(255,255,255,0.8);
+
+        border:
+            1px solid rgba(0,0,0,0.07);
+
+        position: relative;
+
+        font-size: 15px;
+    }
+
+    .notification-dot {
+        position: absolute;
+
+        width: 7px;
+        height: 7px;
+
+        background: var(--red);
+
+        border-radius: 50%;
+
+        right: 7px;
+        top: 7px;
+
+        box-shadow:
+            0 0 0 3px white;
+    }
+
+    .admin-profile-link {
+        display: flex;
+        align-items: center;
+
+        gap: 10px;
+
+        color: inherit;
+    }
+
+    .admin-avatar {
+        width: 39px;
+        height: 39px;
+
+        border-radius: 50%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background:
+            linear-gradient(
+                135deg,
+                #222,
+                #050505
+            );
+
+        color: white;
+
+        border:
+            2px solid rgba(229,9,20,0.45);
+
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .admin-info strong {
+        display: block;
+
+        font-size: 12px;
+    }
+
+    .admin-info span {
+        display: block;
+
+        margin-top: 2px;
+
+        color: var(--muted);
+
+        font-size: 10px;
+    }
+
+
+    /* =========================================================
+       DASHBOARD CONTENT
+    ========================================================= */
+
+    .dashboard-content {
+        padding: 28px 30px 35px;
+    }
+
+
+    /* =========================================================
+       WELCOME GLASS CARD
+    ========================================================= */
+
+    .welcome-banner {
+        position: relative;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        min-height: 145px;
+
+        padding: 27px 30px;
+
+        margin-bottom: 22px;
+
+        border-radius: 19px;
+
+        overflow: hidden;
+
+        color: white;
+
+        background:
+            radial-gradient(
+                circle at 85% 20%,
+                rgba(229,9,20,0.45),
+                transparent 27%
+            ),
+            linear-gradient(
+                120deg,
+                #050505,
+                #151515 60%,
+                #090909
+            );
+
+        border:
+            1px solid rgba(255,255,255,0.09);
+
+        box-shadow:
+            0 18px 45px rgba(0,0,0,0.18);
+    }
+
+    .welcome-banner::before {
+        content: "";
+
+        position: absolute;
+
+        width: 280px;
+        height: 280px;
+
+        right: 60px;
+        top: -180px;
+
+        border-radius: 50%;
+
+        border:
+            1px solid rgba(229,9,20,0.3);
+
+        box-shadow:
+            0 0 70px rgba(229,9,20,0.2);
+    }
+
+    .welcome-banner::after {
+        content: "";
+
+        position: absolute;
+
+        width: 130px;
+        height: 130px;
+
+        right: -40px;
+        bottom: -70px;
+
+        border-radius: 50%;
+
+        background:
+            rgba(229,9,20,0.24);
+
+        filter: blur(25px);
+    }
+
+    .welcome-text {
+        position: relative;
+        z-index: 2;
+    }
+
+    .welcome-text h2 {
+        margin: 0 0 8px;
+
+        font-size: 24px;
+        font-weight: 750;
+    }
+
+    .welcome-text h2 span {
+        color: #ff2630;
+    }
+
+    .welcome-text p {
+        margin: 0;
+
+        color: #bcbcbc;
+
+        font-size: 12px;
+    }
+
+    .dashboard-date {
+        position: relative;
+        z-index: 2;
+
+        padding: 11px 16px;
+
+        border-radius: 12px;
+
+        background:
+            rgba(255,255,255,0.07);
+
+        border:
+            1px solid rgba(255,255,255,0.1);
+
+        backdrop-filter: blur(12px);
+
+        color: #eee;
+
+        font-size: 11px;
+    }
+
+
+    /* =========================================================
+       STATISTICS
+    ========================================================= */
+
+    .stats-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(4, 1fr);
+
+        gap: 17px;
+
+        margin-bottom: 22px;
+    }
+
+    .stat-card {
+        position: relative;
+
+        padding: 20px;
+
+        min-height: 145px;
+
+        border-radius: 17px;
+
+        background:
+            rgba(255,255,255,0.67);
+
+        backdrop-filter: blur(17px);
+        -webkit-backdrop-filter: blur(17px);
+
+        border:
+            1px solid rgba(255,255,255,0.8);
+
+        box-shadow:
+            var(--shadow);
+
+        overflow: hidden;
+
+        transition:
+            transform .2s ease,
+            box-shadow .2s ease;
+    }
+
+    .stat-card::before {
+        content: "";
+
+        position: absolute;
+
+        width: 100px;
+        height: 100px;
+
+        right: -45px;
+        top: -45px;
+
+        border-radius: 50%;
+
+        background:
+            rgba(229,9,20,0.09);
+
+        filter: blur(2px);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+
+        box-shadow:
+            0 20px 45px rgba(0,0,0,0.12);
+    }
+
+    .stat-top {
+        position: relative;
+        z-index: 2;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .stat-label {
+        color: #747474;
+
+        font-size: 11px;
+
+        margin-bottom: 6px;
+    }
+
+    .stat-value {
+        font-size: 26px;
+
+        font-weight: 750;
+
+        color: #111;
+    }
+
+    .stat-value h2 {
+        margin: 0;
+
+        font-size: 26px;
+    }
+
+    .stat-icon {
+        width: 43px;
+        height: 43px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 13px;
+
+        background:
+            rgba(229,9,20,0.10);
+
+        color: var(--red);
+
+        border:
+            1px solid rgba(229,9,20,0.12);
+
+        box-shadow:
+            0 8px 20px rgba(229,9,20,0.08);
+
+        font-size: 17px;
+    }
+
+    .stat-card:nth-child(2) .stat-icon {
+        background: rgba(37,99,235,0.09);
+        color: var(--blue);
+    }
+
+    .stat-card:nth-child(3) .stat-icon {
+        background: rgba(245,158,11,0.10);
+        color: var(--orange);
+    }
+
+    .stat-card:nth-child(4) .stat-icon {
+        background: rgba(22,163,74,0.10);
+        color: var(--green);
+    }
+
+    .stat-change {
+        position: relative;
+        z-index: 2;
+
+        margin-top: 12px;
+
+        font-size: 10px;
+
+        color: #777;
+    }
+
+
+    /* =========================================================
+       MAIN GRID
+    ========================================================= */
+
+    .dashboard-grid {
+        display: grid;
+
+        grid-template-columns:
+            0.85fr 1.55fr;
+
+        gap: 18px;
+
+        margin-bottom: 18px;
+    }
+
+
+    /* =========================================================
+       GLASS CARDS
+    ========================================================= */
+
+    .dashboard-card {
+        background:
+            rgba(255,255,255,0.70);
+
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+
+        border:
+            1px solid rgba(255,255,255,0.85);
+
+        border-radius: 17px;
+
+        padding: 21px;
+
+        box-shadow:
+            var(--shadow);
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        margin-bottom: 17px;
+    }
+
+    .card-header h3 {
+        margin: 0;
+
+        font-size: 15px;
+
+        font-weight: 700;
+    }
+
+    .card-header a {
+        color: var(--red);
+
+        font-size: 11px;
+
+        font-weight: 700;
+
+        transition: .2s;
+    }
+
+    .card-header a:hover {
+        color: var(--red-dark);
+    }
+
+
+    /* =========================================================
+       QUICK ACTIONS
+    ========================================================= */
+
+    .quick-actions {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 11px;
+    }
+
+    .action {
+        display: flex;
+        align-items: center;
+
+        gap: 10px;
+
+        padding: 13px 12px;
+
+        border-radius: 12px;
+
+        background:
+            rgba(255,255,255,0.55);
+
+        border:
+            1px solid rgba(0,0,0,0.06);
+
+        color: #333;
+
+        transition:
+            .2s ease;
+    }
+
+    .action:hover {
+        background:
+            rgba(229,9,20,0.07);
+
+        border-color:
+            rgba(229,9,20,0.22);
+
+        color: #111;
+
+        transform: translateY(-2px);
+    }
+
+    .action-icon {
+        width: 34px;
+        height: 34px;
+
+        flex-shrink: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 10px;
+
+        background:
+            rgba(229,9,20,0.10);
+
+        color: var(--red);
+
+        font-size: 14px;
+    }
+
+    .action span {
+        font-size: 11px;
+
+        font-weight: 650;
+    }
+
+
+    /* =========================================================
+       RECENT ORDERS
+    ========================================================= */
+
+    .orders-container {
+        width: 100%;
+    }
+
+    .order-row {
+        display: grid;
+
+        grid-template-columns:
+            1.15fr 1.55fr .8fr .8fr;
+
+        align-items: center;
+
+        gap: 10px;
+
+        padding: 13px 10px;
+
+        border-bottom:
+            1px solid rgba(0,0,0,0.06);
+
+        transition: .2s;
+    }
+
+    .order-row:last-child {
+        border-bottom: none;
+    }
+
+    .order-row:hover {
+        background:
+            rgba(229,9,20,0.035);
+
+        border-radius: 9px;
+    }
+
+    .order-info strong {
+        display: block;
+
+        font-size: 11px;
+
+        color: #222;
+    }
+
+    .order-info span {
+        display: block;
+
+        margin-top: 4px;
+
+        color: #858585;
+
+        font-size: 10px;
+    }
+
+    .order-customer {
+        font-size: 11px;
+
+        color: #444;
+    }
+
+    .order-date {
+        font-size: 10px;
+
+        color: #777;
+    }
+
+
+    /* STATUS */
+
+    .status {
+        display: inline-flex;
+
+        width: fit-content;
+
+        padding: 5px 9px;
+
+        border-radius: 20px;
+
+        font-size: 9px;
+
+        font-weight: 700;
+
+        white-space: nowrap;
+    }
+
+    .status.pending {
+        background: #fff4dc;
+        color: #a86c00;
+    }
+
+    .status.processing {
+        background: #eaf2ff;
+        color: #2563eb;
+    }
+
+    .status.shipped {
+        background: #eaf2ff;
+        color: #2563eb;
+    }
+
+    .status.delivered,
+    .status.completed {
+        background: #e8f8ee;
+        color: #16803c;
+    }
+
+    .status.cancelled {
+        background: #ffe9e9;
+        color: #d1000b;
+    }
+
+
+    /* EMPTY ORDERS */
+
+    .empty-orders {
+        padding: 30px 10px;
+
+        text-align: center;
+
+        color: #777;
+
+        font-size: 12px;
+    }
+
+
+    /* =========================================================
+       GLASS BACKGROUND EFFECT
+    ========================================================= */
+
+    .dashboard-content::before {
+        content: "";
+
+        position: fixed;
+
+        width: 300px;
+        height: 300px;
+
+        left: 40%;
+        top: 25%;
+
+        background:
+            rgba(229,9,20,0.04);
+
+        border-radius: 50%;
+
+        filter: blur(80px);
+
+        pointer-events: none;
+
+        z-index: -1;
+    }
+
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @@media (max-width: 1200px) {
+
+        .stats-grid {
+            grid-template-columns:
+                repeat(2, 1fr);
+        }
+
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+
+    @@media (max-width: 800px) {
+
+        .admin-sidebar {
+            width: 75px;
+
+            padding: 18px 10px;
+        }
+
+        .brand {
+            justify-content: center;
+
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .brand-name,
+        .brand-subtitle,
+        .menu-title,
+        .sidebar-menu a span:not(.menu-icon),
+        .logout-btn span {
+            display: none;
+        }
+
+        .sidebar-menu a {
+            justify-content: center;
+
+            padding: 12px;
+        }
+
+        .sidebar-menu a.active {
+            border-left: none;
+        }
+
+        .dashboard-main {
+            width: calc(100% - 75px);
+
+            margin-left: 75px;
+        }
+
+        .topbar {
+            padding: 0 18px;
+        }
+
+        .admin-info {
+            display: none;
+        }
+
+        .dashboard-content {
+            padding: 20px 18px;
+        }
+    }
+
+
+    @@media (max-width: 600px) {
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .welcome-banner {
+            padding: 23px;
+        }
+
+        .dashboard-date {
+            display: none;
+        }
+
+        .quick-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .order-row {
+            grid-template-columns:
+                1fr auto;
+        }
+
+        .order-customer,
+        .order-date {
+            display: none;
+        }
+
+        .page-title p {
+            display: none;
+        }
+    }
+
+</style>
+
+
+<div class="admin-dashboard">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="admin-sidebar">
+
+        <!-- BRAND -->
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                SA
+            </div>
+
+            <div>
+
+                <div class="brand-name">
+                    Shopping<span>Application</span>
+                </div>
+
+                <div class="brand-subtitle">
+                    ADMIN PANEL
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- MAIN MENU -->
+
+        <div class="menu-title">
+            Main Menu
+        </div>
+
+        <ul class="sidebar-menu">
+
+            <li>
+                <a href="@Url.Action("Index", "Admin")"
+                   class="active">
+
+                    <span class="menu-icon">▦</span>
+
+                    <span>Dashboard</span>
+
+                </a>
+            </li>
+
+
+            <li>
+
+                <a href="@Url.Action("Users", "Admin")">
+
+                    <span class="menu-icon">👥</span>
+
+                    <span>Users</span>
+
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a href="@Url.Action("Products", "Admin")">
+
+                    <span class="menu-icon">📦</span>
+
+                    <span>Products</span>
+
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a href="@Url.Action("Orders", "Admin")">
+
+                    <span class="menu-icon">🛒</span>
+
+                    <span>Orders</span>
+
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a href="@Url.Action("Revenue", "Admin")">
+
+                    <span class="menu-icon">💰</span>
+
+                    <span>Revenue</span>
+
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a href="@Url.Action("Reports", "Admin")">
+
+                    <span class="menu-icon">📊</span>
+
+                    <span>Reports</span>
+
+                </a>
+
+            </li>
+
+        </ul>
+
+
+        <!-- SYSTEM -->
+
+        <div class="menu-title">
+            System
+        </div>
+
+        <ul class="sidebar-menu">
+
+            <li>
+
+                <a href="@Url.Action("Settings", "Admin")">
+
+                    <span class="menu-icon">⚙</span>
+
+                    <span>Settings</span>
+
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a href="@Url.Action("HelpSupport", "Admin")">
+
+                    <span class="menu-icon">❓</span>
+
+                    <span>Help & Support</span>
+
+                </a>
+
+            </li>
+
+        </ul>
+
+
+        <!-- LOGOUT -->
+
+        <div class="sidebar-bottom">
+
+            <a href="@Url.Action("Logout", "Account")"
+               class="logout-btn">
+
+                <span>↪</span>
+
+                <span>Logout</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="dashboard-main">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div class="page-title">
+
+                <h1>
+                    Dashboard
+                </h1>
+
+                <p>
+                    Manage your store from one place
+                </p>
+
+            </div>
+
+
+            <div class="admin-profile">
+
+
+                <div class="notification">
+
+                    🔔
+
+                    <span class="notification-dot"></span>
+
+                </div>
+
+
+                <a href="@Url.Action("Settings", "Admin")"
+                   class="admin-profile-link">
+
+                    <div class="admin-avatar">
+                        AD
+                    </div>
+
+
+                    <div class="admin-info">
+
+                        <strong>
+                            @Session["FullName"]
+                        </strong>
+
+                        <span>
+                            Super Admin
+                        </span>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- CONTENT -->
+
+        <section class="dashboard-content">
+
+
+            <!-- =================================================
+                 WELCOME
+            ================================================== -->
+
+            <div class="welcome-banner">
+
+                <div class="welcome-text">
+
+                    <h2>
+                        Welcome back,
+                        <span>Admin!</span> 👋
+                    </h2>
+
+                    <p>
+                        Here's what's happening with your store today.
+                    </p>
+
+                </div>
+
+
+                <div class="dashboard-date">
+
+                    📅
+                    @DateTime.Now.ToString("dd MMM yyyy")
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 STATISTICS
+            ================================================== -->
+
+            <div class="stats-grid">
+
+
+                <!-- TOTAL USERS -->
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div>
+                            <a href="@Url.Action("Users", "Admin")">
+                            </a>
+
+                            <div class="stat-label">
+                                Total Users
+                            </div>
+
+                            <div class="stat-value">
+                                @ViewBag.TotalUsers
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-icon">
+                            👥
+                        </div>
+
+                    </div>
+
+                    <div class="stat-change">
+                        Registered customers
+                    </div>
+
+                </div>
+
+
+
+                <!-- TOTAL PRODUCTS -->
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div>
+                            <a href="@Url.Action("Products", "Admin")">
+                                </a>
+
+
+                                <div class="stat-label">
+                                    Total Products
+                                </div>
+
+                                <div class="stat-value">
+                                    @ViewBag.TotalProducts
+                                </div>
+
+                        </div>
+
+
+                        <div class="stat-icon">
+                            📦
+                        </div>
+
+                    </div>
+
+                    <div class="stat-change">
+                        Products in store
+                    </div>
+
+                </div>
+
+
+
+                <!-- TOTAL ORDERS -->
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div>
+
+                            <a href="@Url.Action("Orders", "Admin")">
+
+                            </a>
+
+                            <div class="stat-label">
+                                Total Orders
+                            </div>
+
+                            <div class="stat-value">
+                                @ViewBag.TotalOrders
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-icon">
+                            🛒
+                        </div>
+
+                    </div>
+
+                    <div class="stat-change">
+                        Order management
+                    </div>
+
+                </div>
+
+
+
+                <!-- TOTAL REVENUE -->
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div>
+                            <a href="@Url.Action("Reports", "Admin")">
+
+                            </a>
+                            <div class="stat-label">
+                                Total Revenue
+                            </div>
+
+                            <div class="stat-value">
+                                ₹@(((decimal)(ViewBag.TotalRevenue ?? 0m)).ToString("N2"))
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-icon">
+                            ₹
+                        </div>
+
+                    </div>
+
+                    <div class="stat-change">
+                        Revenue overview
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 LOWER GRID
+            ================================================== -->
+
+            <div class="dashboard-grid">
+
+
+                <!-- =================================================
+                     QUICK ACTIONS
+                ================================================== -->
+
+                <div class="dashboard-card">
+
+                    <div class="card-header">
+
+                        <h3>
+                            Quick Actions
+                        </h3>
+
+                    </div>
+
+
+                    <div class="quick-actions">
+
+
+                        <a href="@Url.Action("AddProduct", "Admin")"
+                           class="action">
+
+                            <div class="action-icon">
+                                +
+                            </div>
+
+                            <span>
+                                Add Product
+                            </span>
+
+                        </a>
+
+
+                        <a href="@Url.Action("Users", "Admin")"
+                           class="action">
+
+                            <div class="action-icon">
+                                👥
+                            </div>
+
+                            <span>
+                                Manage Users
+                            </span>
+
+                        </a>
+
+
+                        <a href="@Url.Action("Products", "Admin")"
+                           class="action">
+
+                            <div class="action-icon">
+                                📦
+                            </div>
+
+                            <span>
+                                View Products
+                            </span>
+
+                        </a>
+
+
+                        <a href="@Url.Action("Orders", "Admin")"
+                           class="action">
+
+                            <div class="action-icon">
+                                🛒
+                            </div>
+
+                            <span>
+                                Manage Orders
+                            </span>
+
+                        </a>
+
+
+                        <a href="@Url.Action("Reports", "Admin")"
+                           class="action">
+
+                            <div class="action-icon">
+                                📊
+                            </div>
+
+                            <span>
+                                View Reports
+                            </span>
+
+                        </a>
+
+
+                        <a href="@Url.Action("Settings", "Admin")"
+                           class="action">
+
+                            <div class="action-icon">
+                                ⚙
+                            </div>
+
+                            <span>
+                                Settings
+                            </span>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     RECENT ORDERS
+                ================================================== -->
+
+                <div class="dashboard-card">
+
+                    <div class="card-header">
+
+                        <h3>
+                            Recent Orders
+                        </h3>
+
+
+                        <a href="@Url.Action("Orders", "Admin")">
+                            View All →
+                        </a>
+
+                    </div>
+
+
+                    @{
+                        var recentOrders =
+                            ViewBag.RecentOrders
+                            as List<Shoping_webapplication_project_.ViewModels.AdminOrderViewModel>;
+                    }
+
+
+                    @if (recentOrders != null && recentOrders.Any())
+                    {
+
+                        <div class="orders-container">
+
+
+                            @foreach (var order in recentOrders)
+                            {
+
+                                <div class="order-row">
+
+
+                                    <div class="order-info">
+
+                                        <strong>
+                                            #@order.OrderId
+                                        </strong>
+
+                                        <span>
+                                            @order.TotalItems item(s)
+                                        </span>
+
+                                    </div>
+
+
+                                    <div class="order-customer">
+
+                                        @order.CustomerName
+
+                                    </div>
+
+
+                                    <div class="order-date">
+
+                                        @order.OrderDate.ToString("dd MMM yyyy")
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <span class="status @order.Status.ToLower()">
+
+                                            @order.Status
+
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            }
+
+                        </div>
+
+                    }
+                    else
+                    {
+
+                        <div class="empty-orders">
+
+                            <strong>
+                                No orders yet
+                            </strong>
+
+                            <br />
+
+                            Recent orders will appear here.
+
+                        </div>
+
+                    }
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+</div>

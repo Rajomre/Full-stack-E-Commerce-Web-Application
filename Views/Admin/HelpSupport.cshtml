@@ -1,0 +1,224 @@
+﻿@{
+    ViewBag.Title = "Help & Support";
+    Layout = "~/Views/Shared/LoginLayout.cshtml";
+}
+
+<div class="container-fluid py-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">Help & Support</h2>
+            <p class="text-muted mb-0">
+                Get help with the Shopping Web Application Admin Panel.
+            </p>
+        </div>
+
+        <a href="@Url.Action("Index", "Admin")"
+           class="btn btn-outline-danger">
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- Help Cards -->
+    <div class="row g-4">
+
+        <!-- Dashboard -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100 border-0">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold">
+                        📊 Dashboard
+                    </h5>
+
+                    <p class="text-muted">
+                        View important statistics such as users,
+                        products, orders and revenue.
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Users -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100 border-0">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold">
+                        👥 User Management
+                    </h5>
+
+                    <p class="text-muted">
+                        Manage registered users, edit their information
+                        and activate or deactivate accounts.
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Products -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100 border-0">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold">
+                        📦 Product Management
+                    </h5>
+
+                    <p class="text-muted">
+                        Add, edit, view and manage products available
+                        in the shopping application.
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Orders -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100 border-0">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold">
+                        🛒 Order Management
+                    </h5>
+
+                    <p class="text-muted">
+                        View customer orders, check order details
+                        and update order status.
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Reports -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100 border-0">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold">
+                        📈 Reports
+                    </h5>
+
+                    <p class="text-muted">
+                        Generate sales reports and review order,
+                        item and revenue information.
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Settings -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100 border-0">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold">
+                        ⚙ Settings
+                    </h5>
+
+                    <p class="text-muted">
+                        Update administrator profile information
+                        and change the administrator password.
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- FAQ -->
+    <div class="card shadow-sm border-0 mt-4">
+
+        <div class="card-body">
+
+            <h4 class="fw-bold mb-4">
+                Frequently Asked Questions
+            </h4>
+
+            <div class="mb-4">
+
+                <h6 class="fw-bold">
+                    How can I add a new product?
+                </h6>
+
+                <p class="text-muted">
+                    Open Product Management from the dashboard
+                    and select Add Product.
+                </p>
+
+            </div>
+
+
+            <div class="mb-4">
+
+                <h6 class="fw-bold">
+                    How can I deactivate a user?
+                </h6>
+
+                <p class="text-muted">
+                    Open User Management, find the required user
+                    and use the Activate/Deactivate option.
+                </p>
+
+            </div>
+
+
+            <div class="mb-4">
+
+                <h6 class="fw-bold">
+                    How can I update an order status?
+                </h6>
+
+                <p class="text-muted">
+                    Open Order Management, view the order details
+                    and select the required order status.
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <h6 class="fw-bold">
+                    How can I change my administrator password?
+                </h6>
+
+                <p class="text-muted">
+                    Open Settings and use the Change Password section.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

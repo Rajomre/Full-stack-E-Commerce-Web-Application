@@ -1,0 +1,365 @@
+﻿@model Shoping_webapplication_project_.Models.UserOrderDetailsViewModel
+
+@{
+    ViewBag.Title = "Order " + Model.Order.OrderNumber;
+    Layout = "~/Views/Shared/UserDashboardLayout.cshtml";
+
+    var order = Model.Order;
+    var items = Model.Items;
+}
+
+<style>
+    .breadcrumb-nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: #777;
+        margin-bottom: 24px;
+    }
+
+        .breadcrumb-nav a {
+            color: #111;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+            .breadcrumb-nav a:hover {
+                color: #e50914;
+            }
+
+    .order-details-card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 35px;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        margin-bottom: 25px;
+    }
+
+    .order-head-banner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #f0f0f0;
+        margin-bottom: 25px;
+    }
+
+        .order-head-banner h1 {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0 0 5px;
+            color: #111;
+        }
+
+        .order-head-banner span {
+            font-size: 13px;
+            color: #888;
+        }
+
+    .action-button-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .btn-print-invoice {
+        background: #f5f5f5;
+        color: #111;
+        border: 1px solid #ddd;
+        padding: 8px 16px;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: 0.2s ease;
+    }
+
+        .btn-print-invoice:hover {
+            background: #111;
+            color: #fff;
+            border-color: #111;
+        }
+
+    .btn-cancel-order {
+        background: #fff;
+        color: #e50914;
+        border: 1px solid #e50914;
+        padding: 8px 16px;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+        .btn-cancel-order:hover {
+            background: #e50914;
+            color: #fff;
+        }
+
+    .status-pill-big {
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-pending {
+        background: #fff8e6;
+        color: #b78103;
+    }
+
+    .status-processing {
+        background: #e8f4fd;
+        color: #0b69a3;
+    }
+
+    .status-shipped {
+        background: #f3e8fd;
+        color: #6b21a8;
+    }
+
+    .status-delivered {
+        background: #e8f7ee;
+        color: #1a8742;
+    }
+
+    .status-cancelled {
+        background: #fde8e8;
+        color: #e50914;
+    }
+
+    /* Alert */
+    .alert-cancel-success {
+        background: #e8f7ee;
+        color: #1a8742;
+        border: 1px solid #c2ebd1;
+        padding: 12px 18px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    /* Items Table */
+    .items-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+        .items-table th {
+            text-align: left;
+            padding: 12px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #666;
+            border-bottom: 1px solid #eee;
+        }
+
+        .items-table td {
+            padding: 16px 14px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f5f5f5;
+            font-size: 13px;
+        }
+
+    .item-product-cell {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .item-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        background: #f7f7f8;
+        object-fit: cover;
+    }
+
+    .order-summary-box {
+        margin-top: 25px;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .summary-table {
+        width: 340px;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        color: #555;
+        margin-bottom: 10px;
+    }
+
+        .summary-row.total-row {
+            font-size: 17px;
+            font-weight: 800;
+            color: #111;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+        }
+
+            .summary-row.total-row span:last-child {
+                color: #e50914;
+            }
+
+    /* ================= PRINT STYLES ================= */
+    @@media print {
+        body {
+            background: #fff !important;
+            color: #000 !important;
+        }
+
+        .user-sidebar,
+        .user-topbar,
+        .breadcrumb-nav,
+        .action-button-group,
+        .btn-cancel-order,
+        .back-link-box {
+            display: none !important;
+        }
+
+        .user-main {
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #fff !important;
+        }
+
+        .order-details-card {
+            box-shadow: none !important;
+            border: 1px solid #ccc !important;
+            padding: 20px !important;
+        }
+    }
+</style>
+
+<div class="breadcrumb-nav">
+    <a href="@Url.Action("Index", "Dashboard")">Home</a>
+    <span>/</span>
+    <a href="@Url.Action("Orders", "Dashboard")">My Orders</a>
+    <span>/</span>
+    <span>@order.OrderNumber</span>
+</div>
+
+@if (TempData["OrderCancelMessage"] != null)
+{
+    <div class="alert-cancel-success">
+        &#10003; @TempData["OrderCancelMessage"]
+    </div>
+}
+
+<div class="order-details-card" id="invoiceSection">
+
+    <div class="order-head-banner">
+        <div>
+            <h1>Order #@order.OrderNumber</h1>
+            <span>Placed on @order.OrderDate.ToString("dd MMMM yyyy, hh:mm tt")</span>
+        </div>
+
+        <div class="action-button-group">
+            @{
+                var statusClass = "status-pending";
+                if (order.Status == "Processing") { statusClass = "status-processing"; }
+                else if (order.Status == "Shipped") { statusClass = "status-shipped"; }
+                else if (order.Status == "Delivered") { statusClass = "status-delivered"; }
+                else if (order.Status == "Cancelled") { statusClass = "status-cancelled"; }
+            }
+            <span class="status-pill-big @statusClass">@order.Status</span>
+
+            <!-- 1. PRINT INVOICE BUTTON -->
+            <button type="button" class="btn-print-invoice" onclick="window.print();" title="Print or Save as PDF">
+                &#128424; Print Invoice
+            </button>
+
+            <!-- 2. CANCEL ORDER BUTTON (Active only if Pending) -->
+            @if (order.Status == "Pending")
+            {
+                using (Html.BeginForm("CancelOrder", "Dashboard", FormMethod.Post, new { style = "display:inline;" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@order.OrderId" />
+                    <button type="submit" class="btn-cancel-order"
+                            onclick="return confirm('Are you sure you want to cancel this order? The stock will be automatically restored.');">
+                        Cancel Order
+                    </button>
+                }
+            }
+        </div>
+    </div>
+
+    <!-- Items List -->
+    <h3 style="font-size:16px;font-weight:800;margin:0 0 10px;color:#111;">Purchased Items</h3>
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th style="text-align:center;">Quantity</th>
+                <th style="text-align:right;">Unit Price</th>
+                <th style="text-align:right;">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in items)
+            {
+                <tr>
+                    <td>
+                        <div class="item-product-cell">
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <img src="@Url.Content(item.ImageUrl)" class="item-img" alt="@item.ProductName" />
+                            }
+                            else
+                            {
+                                <div class="item-img" style="display:flex;align-items:center;justify-content:center;font-size:9px;color:#aaa;">No Img</div>
+                            }
+                            <strong>@item.ProductName</strong>
+                        </div>
+                    </td>
+                    <td style="text-align:center;font-weight:700;">@item.Quantity</td>
+                    <td style="text-align:right;">&#8377;@item.UnitPrice.ToString("N2")</td>
+                    <td style="text-align:right;font-weight:700;color:#111;">&#8377;@item.TotalPrice.ToString("N2")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Invoice Summary -->
+    <div class="order-summary-box">
+        <div class="summary-table">
+            <div class="summary-row">
+                <span>Payment Mode</span>
+                <strong style="color:#111;">Cash on Delivery</strong>
+            </div>
+            <div class="summary-row">
+                <span>Shipping Fee</span>
+                <span style="color:#1a8742;font-weight:700;">FREE</span>
+            </div>
+            <div class="summary-row total-row">
+                <span>Grand Total</span>
+                <span>&#8377;@order.TotalAmount.ToString("N2")</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="back-link-box" style="margin-top:15px;">
+    <a href="@Url.Action("Orders", "Dashboard")" style="color:#e50914;font-size:13px;font-weight:700;text-decoration:none;">
+        &larr; Back to All Orders
+    </a>
+</div>

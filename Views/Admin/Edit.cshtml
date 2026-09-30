@@ -1,0 +1,267 @@
+﻿@model Shoping_webapplication_project_.ViewModels.AdminEditUserViewModel
+@{
+    ViewBag.Title = "Edit User";
+    Layout = "~/Views/Shared/LoginLayout.cshtml";
+}
+
+<style>
+    .edit-page {
+        padding: 30px;
+        background: #f5f5f5;
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+    }
+
+    .edit-header {
+        margin-bottom: 25px;
+    }
+
+        .edit-header h2 {
+            margin: 0;
+            color: #111;
+            font-size: 28px;
+        }
+
+        .edit-header p {
+            color: #777;
+            margin-top: 6px;
+        }
+
+    .edit-card {
+        max-width: 750px;
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
+
+    .edit-card-header {
+        background: #111;
+        color: #fff;
+        padding: 20px 25px;
+    }
+
+        .edit-card-header h3 {
+            margin: 0;
+        }
+
+    .edit-body {
+        padding: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 600;
+            color: #333;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 11px 13px;
+        border: 1px solid #ddd;
+        border-radius: 7px;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+
+        .form-control:focus {
+            border-color: #e00000;
+            outline: none;
+        }
+
+    .text-danger {
+        color: #e00000;
+        font-size: 13px;
+        display: block;
+        margin-top: 5px;
+    }
+
+    .button-area {
+        display: flex;
+        gap: 10px;
+        margin-top: 25px;
+    }
+
+    .save-btn {
+        background: #e00000;
+        color: #fff;
+        border: none;
+        padding: 11px 25px;
+        border-radius: 7px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+        .save-btn:hover {
+            background: #b80000;
+        }
+
+    .cancel-btn {
+        background: #222;
+        color: #fff;
+        padding: 11px 25px;
+        border-radius: 7px;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+        .cancel-btn:hover {
+            background: #444;
+            color: #fff;
+            text-decoration: none;
+        }
+
+    .user-id {
+        background: #f2f2f2;
+        padding: 10px 13px;
+        border-radius: 7px;
+        color: #555;
+    }
+</style>
+
+
+<div class="edit-page">
+
+    <div class="edit-header">
+        <h2>Edit User</h2>
+        <p>Update the user's account information.</p>
+    </div>
+
+
+    <div class="edit-card">
+
+        <div class="edit-card-header">
+            <h3>@Model.FullName</h3>
+        </div>
+
+
+        <div class="edit-body">
+
+            @using (Html.BeginForm("Edit", "Admin", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.HiddenFor(model => model.UserId)
+
+                <div class="form-group">
+
+                    <label>User ID</label>
+
+                    <div class="user-id">
+                        @Model.UserId
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    @Html.LabelFor(model => model.FullName)
+
+                    @Html.TextBoxFor(
+                        model => model.FullName,
+                        new
+                        {
+                            @class = "form-control",
+                            placeholder = "Enter full name"
+                        })
+
+                    @Html.ValidationMessageFor(
+                        model => model.FullName,
+                        "",
+                        new { @class = "text-danger" })
+
+                </div>
+
+
+                <div class="form-group">
+
+                    @Html.LabelFor(model => model.Email)
+
+                    @Html.TextBoxFor(
+                        model => model.Email,
+                        new
+                        {
+                            @class = "form-control",
+                            type = "email",
+                            placeholder = "Enter email"
+                        })
+
+                    @Html.ValidationMessageFor(
+                        model => model.Email,
+                        "",
+                        new { @class = "text-danger" })
+
+                </div>
+
+
+                <div class="form-group">
+
+                    @Html.LabelFor(model => model.Phone)
+
+                    @Html.TextBoxFor(
+                        model => model.Phone,
+                        new
+                        {
+                            @class = "form-control",
+                            placeholder = "Enter phone number"
+                        })
+
+                    @Html.ValidationMessageFor(
+                        model => model.Phone,
+                        "",
+                        new { @class = "text-danger" })
+
+                </div>
+
+
+                <div class="form-group">
+
+                    @Html.LabelFor(model => model.Role)
+
+                    @Html.DropDownListFor(
+                        model => model.Role,
+                        new SelectList(
+                            new[]
+                            {
+                                new { Value = "User", Text = "User" },
+                                new { Value = "Admin", Text = "Admin" }
+                            },
+                            "Value",
+                            "Text",
+                            Model.Role
+                        ),
+                        new { @class = "form-control" })
+
+                    @Html.ValidationMessageFor(
+                        model => model.Role,
+                        "",
+                        new { @class = "text-danger" })
+
+                </div>
+
+
+                <div class="button-area">
+
+                    <button type="submit" class="save-btn">
+                        Save Changes
+                    </button>
+
+                    <a href="@Url.Action("Details", "Admin", new { id = Model.UserId })"
+                       class="cancel-btn">
+                        Cancel
+                    </a>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>

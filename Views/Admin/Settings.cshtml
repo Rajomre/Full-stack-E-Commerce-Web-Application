@@ -1,0 +1,332 @@
+﻿@model Shoping_webapplication_project_.ViewModels.AdminSettingsViewModel
+
+@{
+    ViewBag.Title = "Settings";
+    Layout = "~/Views/Shared/LoginLayout.cshtml";
+}
+
+<style>
+    .settings-container {
+        padding: 30px;
+        max-width: 1100px;
+        margin: auto;
+    }
+
+    .settings-header {
+        margin-bottom: 25px;
+    }
+
+        .settings-header h2 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .settings-header p {
+            color: #777;
+            margin-top: 6px;
+        }
+
+    .settings-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 25px;
+    }
+
+    .settings-card {
+        background: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+    }
+
+        .settings-card h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+    .form-control {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 11px 12px;
+        border: 1px solid #ddd;
+        border-radius: 7px;
+        font-size: 14px;
+    }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #111;
+        }
+
+    .save-btn {
+        background: #111;
+        color: white;
+        border: none;
+        padding: 11px 22px;
+        border-radius: 7px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+        .save-btn:hover {
+            background: #d60000;
+        }
+
+    .account-info {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .info-row {
+        padding-bottom: 12px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .info-label {
+        display: block;
+        color: #777;
+        font-size: 13px;
+        margin-bottom: 4px;
+    }
+
+    .info-value {
+        font-weight: 600;
+    }
+
+    .active-status {
+        color: green;
+        font-weight: 600;
+    }
+
+    .validation-message {
+        color: #d60000;
+        font-size: 13px;
+    }
+
+    @@media (max-width: 800px) {
+        .settings-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .settings-container {
+            padding: 15px;
+        }
+    }
+</style>
+
+<div class="settings-container">
+
+    <div class="settings-header">
+        <h2>Admin Settings</h2>
+        <p>Manage your administrator profile and account settings.</p>
+    </div>
+
+    <div class="page-header">
+        <div>
+            <h1>Admin Settings</h1>
+            <p>Manage your profile and account settings.</p>
+        </div>
+
+        <a href="@Url.Action("Index", "Admin")" class="btn btn-outline-danger">
+            ← Back to Dashboard
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <div class="settings-grid">
+
+        <!-- Profile -->
+        <div>
+
+            <div class="settings-card">
+
+                <h3>Admin Profile</h3>
+
+                @using (Html.BeginForm("UpdateSettings", "Admin", FormMethod.Post))
+                {
+                    @Html.HiddenFor(m => m.UserId)
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FullName)
+
+                        @Html.TextBoxFor(
+                                                m => m.FullName,
+                                                new { @class = "form-control" }
+                                            )
+
+                        @Html.ValidationMessageFor(
+                                                m => m.FullName,
+                                                "",
+                                                new { @class = "validation-message" }
+                                            )
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Email)
+
+                        @Html.TextBoxFor(
+                                                m => m.Email,
+                                                new
+                                                {
+                                                    @class = "form-control",
+                                                    type = "email"
+                                                }
+                                            )
+
+                        @Html.ValidationMessageFor(
+                                                m => m.Email,
+                                                "",
+                                                new { @class = "validation-message" }
+                                            )
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Phone)
+
+                        @Html.TextBoxFor(
+                                                m => m.Phone,
+                                                new { @class = "form-control" }
+                                            )
+
+                        @Html.ValidationMessageFor(
+                                                m => m.Phone,
+                                                "",
+                                                new { @class = "validation-message" }
+                                            )
+                    </div>
+
+                    <button type="submit" class="save-btn">
+                        Save Changes
+                    </button>
+                }
+
+            </div>
+            @if (TempData["PasswordSuccess"] != null)
+            {
+                <div class="alert alert-success">
+                    @TempData["PasswordSuccess"]
+                </div>
+            }
+
+            @if (TempData["PasswordError"] != null)
+            {
+                <div class="alert alert-danger">
+                    @TempData["PasswordError"]
+                </div>
+            }
+
+            <!-- Change Password -->
+        <div class="settings-card">
+
+            <h3>Change Password</h3>
+
+            @using (Html.BeginForm("ChangePassword", "Admin", FormMethod.Post))
+            {
+                @Html.HiddenFor(m => m.UserId)
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.CurrentPassword)
+
+                    @Html.PasswordFor(
+                                                 m => m.CurrentPassword,
+                                                 new { @class = "form-control" }
+                                             )
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.NewPassword)
+
+                    @Html.PasswordFor(
+                                                 m => m.NewPassword,
+                                                 new { @class = "form-control" }
+                                             )
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.ConfirmPassword)
+
+                    @Html.PasswordFor(
+                                                 m => m.ConfirmPassword,
+                                                 new { @class = "form-control" }
+                                             )
+
+                    @Html.ValidationMessageFor(
+                                                 m => m.ConfirmPassword,
+                                                 "",
+                                                 new { @class = "validation-message" }
+                                             )
+                </div>
+
+                <button type="submit" class="save-btn">
+                    Change Password
+                </button>
+            }
+
+        </div>
+
+        </div>
+
+        <!-- Account Information -->
+        <div>
+
+            <div class="settings-card">
+
+                <h3>Account Information</h3>
+
+                <div class="account-info">
+
+                    <div class="info-row">
+                        <span class="info-label">User ID</span>
+                        <span class="info-value">@Model.UserId</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Role</span>
+                        <span class="info-value">@Model.Role</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Account Status</span>
+
+                        @if (Model.IsActive)
+                        {
+                            <span class="active-status">Active</span>
+                        }
+                        else
+                        {
+                            <span class="validation-message">Inactive</span>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,267 @@
+﻿@model Shoping_webapplication_project_.ViewModels.AdminAddProductViewModel
+
+@{
+    ViewBag.Title = "Add Product";
+    Layout = "~/Views/Shared/LoginLayout.cshtml";
+
+}
+
+<style>
+    .product-page {
+        max-width: 900px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .page-header p {
+            margin-top: 6px;
+            color: #777;
+        }
+
+    .back-btn {
+        text-decoration: none;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .form-card {
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 600;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #ddd;
+        border-radius: 7px;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+
+    textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .text-danger {
+        display: block;
+        margin-top: 5px;
+        color: #dc3545;
+        font-size: 13px;
+    }
+
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 25px;
+    }
+
+        .checkbox-group label {
+            margin: 0;
+        }
+
+    .button-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 25px;
+    }
+
+    .save-btn {
+        border: none;
+        background: #dc3545;
+        color: white;
+        padding: 12px 22px;
+        border-radius: 7px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .cancel-btn {
+        text-decoration: none;
+        background: #eee;
+        color: #333;
+        padding: 12px 22px;
+        border-radius: 7px;
+        font-weight: 600;
+    }
+
+    .validation-summary {
+        color: #dc3545;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="product-page">
+
+    <div class="page-header">
+        <div>
+            <h1>Add Product</h1>
+            <p>Add a new product to your store.</p>
+        </div>
+
+        <a href="@Url.Action("Products", "Admin")" class="back-btn">
+            ← Products
+        </a>
+    </div>
+
+    <div class="form-card">
+
+        @using (Html.BeginForm("AddProduct", "Admin", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(
+                true,
+                "",
+                new { @class = "validation-summary" })
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ProductName)
+
+                @Html.TextBoxFor(
+                    model => model.ProductName,
+                    new
+                    {
+                        @class = "form-control",
+                        placeholder = "Enter product name"
+                    })
+
+                @Html.ValidationMessageFor(
+                    model => model.ProductName,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Description)
+
+                @Html.TextAreaFor(
+                    model => model.Description,
+                    new
+                    {
+                        @class = "form-control",
+                        placeholder = "Enter product description"
+                    })
+
+                @Html.ValidationMessageFor(
+                    model => model.Description,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Price)
+
+                @Html.TextBoxFor(
+                    model => model.Price,
+                    new
+                    {
+                        @class = "form-control",
+                        type = "number",
+                        step = "0.01",
+                        min = "0.01",
+                        placeholder = "Enter price"
+                    })
+
+                @Html.ValidationMessageFor(
+                    model => model.Price,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.StockQuantity)
+
+                @Html.TextBoxFor(
+                    model => model.StockQuantity,
+                    new
+                    {
+                        @class = "form-control",
+                        type = "number",
+                        min = "0",
+                        placeholder = "Enter stock quantity"
+                    })
+
+                @Html.ValidationMessageFor(
+                    model => model.StockQuantity,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Category)
+
+                @Html.TextBoxFor(
+                    model => model.Category,
+                    new
+                    {
+                        @class = "form-control",
+                        placeholder = "e.g. Electronics"
+                    })
+
+                @Html.ValidationMessageFor(
+                    model => model.Category,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ImageUrl)
+
+                @Html.TextBoxFor(
+                    model => model.ImageUrl,
+                    new
+                    {
+                        @class = "form-control",
+                        placeholder = "Enter image URL"
+                    })
+
+                @Html.ValidationMessageFor(
+                    model => model.ImageUrl,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="checkbox-group">
+                @Html.CheckBoxFor(model => model.IsActive)
+                @Html.LabelFor(model => model.IsActive)
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="save-btn">
+                    Add Product
+                </button>
+
+                <a href="@Url.Action("Products", "Admin")"
+                   class="cancel-btn">
+                    Cancel
+                </a>
+            </div>
+        }
+    </div>
+</div>

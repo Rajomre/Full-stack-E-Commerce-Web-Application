@@ -1,0 +1,171 @@
+﻿@model IEnumerable<Shoping_webapplication_project_.Models.Order>
+
+@{
+    ViewBag.Title = "My Orders";
+    Layout = "~/Views/Shared/UserDashboardLayout.cshtml";
+}
+
+<style>
+    .orders-title-row {
+        margin-bottom: 25px;
+    }
+
+    .orders-title-row h1 {
+        font-size: 26px;
+        font-weight: 800;
+        margin: 0 0 5px;
+        color: #111;
+    }
+
+    .orders-title-row p {
+        margin: 0;
+        font-size: 13px;
+        color: #777;
+    }
+
+    .orders-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .order-card {
+        background: #fff;
+        border-radius: 18px;
+        padding: 22px 25px;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+        transition: 0.2s ease;
+    }
+
+    .order-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+        border-color: rgba(229, 9, 20, 0.2);
+    }
+
+    .order-meta strong {
+        font-size: 15px;
+        color: #111;
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .order-meta span {
+        font-size: 12px;
+        color: #888;
+    }
+
+    .order-status-badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-pending { background: #fff8e6; color: #b78103; }
+    .status-processing { background: #e8f4fd; color: #0b69a3; }
+    .status-shipped { background: #f3e8fd; color: #6b21a8; }
+    .status-delivered { background: #e8f7ee; color: #1a8742; }
+    .status-cancelled { background: #fde8e8; color: #e50914; }
+
+    .order-price {
+        font-size: 18px;
+        font-weight: 800;
+        color: #e50914;
+    }
+
+    .btn-view-order {
+        padding: 9px 18px;
+        border-radius: 10px;
+        background: #111;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+    .btn-view-order:hover {
+        background: #e50914;
+        color: #fff;
+    }
+
+    .empty-orders {
+        background: #fff;
+        border-radius: 20px;
+        padding: 60px 20px;
+        text-align: center;
+        border: 1px dashed #ddd;
+    }
+
+    .empty-orders h3 {
+        margin: 0 0 8px;
+        font-size: 18px;
+        color: #111;
+    }
+
+    .empty-orders p {
+        color: #777;
+        font-size: 13px;
+        margin: 0 0 20px;
+    }
+</style>
+
+<div class="orders-title-row">
+    <h1>My Orders</h1>
+    <p>Track your ongoing orders and review your past purchases.</p>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <div class="orders-list">
+        @foreach (var order in Model)
+        {
+            var statusClass = "status-pending";
+            if (order.Status == "Processing") { statusClass = "status-processing"; }
+            else if (order.Status == "Shipped") { statusClass = "status-shipped"; }
+            else if (order.Status == "Delivered") { statusClass = "status-delivered"; }
+            else if (order.Status == "Cancelled") { statusClass = "status-cancelled"; }
+
+            <div class="order-card">
+                <div class="order-meta">
+                    <strong>@order.OrderNumber</strong>
+                    <span>Ordered on @order.OrderDate.ToString("dd MMM yyyy, hh:mm tt")</span>
+                </div>
+
+                <div>
+                    <span class="order-status-badge @statusClass">@order.Status</span>
+                </div>
+
+                <div class="order-price">
+                    &#8377;@order.TotalAmount.ToString("N2")
+                </div>
+
+                <div>
+                    <a href="@Url.Action("OrderDetails", "Dashboard", new { id = order.OrderId })" class="btn-view-order">
+                        Order Details &#10148;
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="empty-orders">
+        <h3>No Orders Placed Yet</h3>
+        <p>You haven't placed any orders yet. Explore our products and start shopping.</p>
+        <a href="@Url.Action("Index", "Product")" class="btn-view-order" style="background:#e50914;padding:10px 22px;">
+            Shop Products
+        </a>
+    </div>
+}

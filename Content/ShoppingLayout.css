@@ -1,0 +1,11 @@
+﻿body {
+    background-color: yellow !important;
+}
+
+.navbar {
+    background-color: red !important;
+}
+nav.navbar {
+    background-color: red !important;
+    background-image: none !important;
+}

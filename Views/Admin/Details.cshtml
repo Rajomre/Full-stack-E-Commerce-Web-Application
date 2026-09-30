@@ -1,0 +1,284 @@
+﻿@model Shoping_webapplication_project_.Models.User
+
+@{
+    ViewBag.Title = "User Details";
+    Layout = "~/Views/Shared/LoginLayout.cshtml";
+}
+
+<style>
+    .details-page {
+        padding: 30px;
+        background: #f5f5f5;
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+    }
+
+    .details-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+        .details-header h2 {
+            margin: 0;
+            color: #111;
+            font-size: 28px;
+        }
+
+    .back-btn {
+        background: #111;
+        color: white;
+        padding: 10px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+    }
+
+        .back-btn:hover {
+            background: #e00000;
+            color: white;
+            text-decoration: none;
+        }
+
+    .details-card {
+        max-width: 800px;
+        background: white;
+        border-radius: 14px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
+
+    .details-card-header {
+        background: #111;
+        color: white;
+        padding: 22px 25px;
+    }
+
+        .details-card-header h3 {
+            margin: 0;
+            font-size: 21px;
+        }
+
+    .details-body {
+        padding: 25px;
+    }
+
+    .detail-row {
+        display: flex;
+        padding: 16px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+    .detail-label {
+        width: 180px;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .detail-value {
+        flex: 1;
+        color: #111;
+    }
+
+    .role-badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 20px;
+        background: #eee;
+        color: #222;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .role-admin {
+        background: #111;
+        color: white;
+    }
+
+    .action-area {
+        margin-top: 25px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .edit-btn {
+        background: #e00000;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 7px;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+        .edit-btn:hover {
+            background: #b80000;
+            color: white;
+            text-decoration: none;
+        }
+
+    .users-btn {
+        background: #222;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 7px;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+        .users-btn:hover {
+            background: #444;
+            color: white;
+            text-decoration: none;
+        }
+
+    @@media (max-width: 600px) {
+        .details-page {
+            padding: 20px 12px;
+        }
+
+        .details-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .detail-row {
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .detail-label {
+            width: 100%;
+        }
+    }
+</style>
+
+
+<div class="details-page">
+
+    <div class="details-header">
+
+        <div>
+            <h2>User Details</h2>
+        </div>
+
+        <a href="@Url.Action("Users", "Admin")" class="back-btn">
+            ← Back to Users
+        </a>
+
+    </div>
+
+
+    <div class="details-card">
+
+        <div class="details-card-header">
+            <h3>@Model.FullName</h3>
+        </div>
+
+
+        <div class="details-body">
+
+            <div class="detail-row">
+                <div class="detail-label">
+                    User ID
+                </div>
+
+                <div class="detail-value">
+                    @Model.UserId
+                </div>
+            </div>
+
+
+            <div class="detail-row">
+                <div class="detail-label">
+                    Full Name
+                </div>
+
+                <div class="detail-value">
+                    @Model.FullName
+                </div>
+            </div>
+
+
+            <div class="detail-row">
+                <div class="detail-label">
+                    Email
+                </div>
+
+                <div class="detail-value">
+                    @Model.Email
+                </div>
+            </div>
+
+
+            <div class="detail-row">
+                <div class="detail-label">
+                    Phone
+                </div>
+
+                <div class="detail-value">
+                    @Model.Phone
+                </div>
+            </div>
+
+
+            <div class="detail-row">
+                <div class="detail-label">
+                    Role
+                </div>
+
+                <div class="detail-value">
+
+                    @if (Model.Role == "Admin")
+                    {
+                        <span class="role-badge role-admin">
+                            Admin
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="role-badge">
+                            @Model.Role
+                        </span>
+                    }
+
+                </div>
+            </div>
+
+
+            <div class="detail-row">
+                <div class="detail-label">
+                    Created At
+                </div>
+
+                <div class="detail-value">
+                    @Model.CreatedAt.ToString("dd MMMM yyyy, hh:mm tt")
+                </div>
+            </div>
+
+
+            <div class="action-area">
+
+                <a href="@Url.Action("Edit", "Admin", new { id = Model.UserId })"
+                   class="edit-btn">
+                    Edit User
+                </a>
+
+                <a href="@Url.Action("Users", "Admin")"
+                   class="users-btn">
+                    Back to Users
+                </a>
+
+            </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

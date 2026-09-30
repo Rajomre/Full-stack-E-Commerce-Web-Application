@@ -1,0 +1,291 @@
+﻿@model List<Shoping_webapplication_project_.Models.CartItem>
+
+@{
+    ViewBag.Title = "Checkout";
+    Layout = "~/Views/Shared/UserDashboardLayout.cshtml";
+
+    decimal totalAmount = Model != null ? Model.Sum(i => i.TotalPrice) : 0;
+    int totalItems = Model != null ? Model.Sum(i => i.Quantity) : 0;
+}
+
+<style>
+    .checkout-title-row {
+        margin-bottom: 25px;
+    }
+
+        .checkout-title-row h1 {
+            font-size: 26px;
+            font-weight: 800;
+            margin: 0 0 5px;
+            color: #111;
+        }
+
+        .checkout-title-row p {
+            margin: 0;
+            font-size: 13px;
+            color: #777;
+        }
+
+    .checkout-grid {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 25px;
+        align-items: start;
+    }
+
+    .checkout-card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 30px;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        margin-bottom: 20px;
+    }
+
+        .checkout-card h3 {
+            margin: 0 0 20px;
+            font-size: 17px;
+            font-weight: 800;
+            color: #111;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+    .step-num {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: #e50914;
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #444;
+            margin-bottom: 6px;
+        }
+
+    .form-input {
+        width: 100%;
+        height: 44px;
+        padding: 0 14px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        font-size: 13px;
+        outline: none;
+        transition: 0.2s ease;
+    }
+
+        .form-input:focus {
+            border-color: #e50914;
+        }
+
+    .form-textarea {
+        width: 100%;
+        height: 90px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        font-size: 13px;
+        outline: none;
+        resize: vertical;
+        transition: 0.2s ease;
+    }
+
+        .form-textarea:focus {
+            border-color: #e50914;
+        }
+
+    .payment-option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px;
+        border-radius: 12px;
+        border: 2px solid #e50914;
+        background: rgba(229, 9, 20, 0.03);
+    }
+
+    /* Summary Side */
+    .order-item-mini {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 13px;
+    }
+
+        .order-item-mini strong {
+            color: #111;
+            display: block;
+        }
+
+        .order-item-mini span {
+            color: #888;
+            font-size: 11px;
+        }
+
+    .checkout-summary-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 12px;
+    }
+
+    .checkout-total-line {
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+        margin-top: 15px;
+        font-size: 16px;
+        font-weight: 800;
+        color: #111;
+    }
+
+        .checkout-total-line span:last-child {
+            color: #e50914;
+            font-size: 22px;
+        }
+
+    .btn-place-order {
+        width: 100%;
+        height: 50px;
+        background: #e50914;
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: 0.2s ease;
+        box-shadow: 0 6px 20px rgba(229, 9, 20, 0.35);
+        margin-top: 20px;
+    }
+
+        .btn-place-order:hover {
+            background: #b20710;
+            transform: translateY(-2px);
+        }
+
+    @@media (max-width: 900px) {
+        .checkout-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="checkout-title-row">
+    <h1>Checkout Order</h1>
+    <p>Review your information and confirm your purchase.</p>
+</div>
+
+@using (Html.BeginForm("PlaceOrder", "Cart", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="checkout-grid">
+
+        <!-- Left Column: Forms -->
+        <div>
+            <!-- Step 1: Customer Details -->
+            <div class="checkout-card">
+                <h3><span class="step-num">1</span> Customer Details</h3>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" class="form-input" value="@ViewBag.CustomerName" readonly style="background:#f7f7f8;" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="text" class="form-input" value="@ViewBag.CustomerPhone" readonly style="background:#f7f7f8;" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" class="form-input" value="@ViewBag.CustomerEmail" readonly style="background:#f7f7f8;" />
+                </div>
+            </div>
+
+            <!-- Step 2: Shipping Address -->
+            <div class="checkout-card">
+                <h3><span class="step-num">2</span> Delivery Address</h3>
+
+                <div class="form-group">
+                    <label>Complete Shipping Address *</label>
+                    <textarea name="shippingAddress" class="form-textarea" placeholder="Flat / House No., Street, City, Pincode" required></textarea>
+                </div>
+            </div>
+
+            <!-- Step 3: Payment Method -->
+            <div class="checkout-card">
+                <h3><span class="step-num">3</span> Payment Method</h3>
+
+                <div class="payment-option">
+                    <input type="radio" id="cod" name="paymentMethod" value="COD" checked />
+                    <label for="cod" style="margin:0;font-size:13px;font-weight:700;cursor:pointer;">
+                        Cash on Delivery (Pay when received)
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Order Summary -->
+        <div>
+            <div class="checkout-card">
+                <h3>Order Summary (@totalItems items)</h3>
+
+                <div style="max-height: 240px; overflow-y: auto; margin-bottom: 15px;">
+                    @foreach (var item in Model)
+                    {
+                        <div class="order-item-mini">
+                            <div>
+                                <strong>@item.ProductName</strong>
+                                <span>Qty: @item.Quantity &times; &#8377;@item.Price.ToString("N2")</span>
+                            </div>
+                            <div style="font-weight:700;color:#111;">
+                                &#8377;@item.TotalPrice.ToString("N2")
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="checkout-summary-line">
+                    <span>Subtotal</span>
+                    <span>&#8377;@totalAmount.ToString("N2")</span>
+                </div>
+
+                <div class="checkout-summary-line">
+                    <span>Delivery</span>
+                    <span style="color:#1a8742;font-weight:700;">FREE</span>
+                </div>
+
+                <div class="checkout-summary-line checkout-total-line">
+                    <span>Total Amount</span>
+                    <span>&#8377;@totalAmount.ToString("N2")</span>
+                </div>
+
+                <button type="submit" class="btn-place-order">
+                    Confirm & Place Order &#10148;
+                </button>
+            </div>
+        </div>
+
+    </div>
+}

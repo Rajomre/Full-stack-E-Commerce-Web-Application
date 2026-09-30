@@ -1,0 +1,432 @@
+﻿@model Shoping_webapplication_project_.Models.Product
+
+@{
+    ViewBag.Title = Model.ProductName + " - Details";
+    Layout = "~/Views/Shared/UserDashboardLayout.cshtml";
+
+    var relatedProducts = ViewBag.RelatedProducts as List<Shoping_webapplication_project_.Models.Product>
+                          ?? new List<Shoping_webapplication_project_.Models.Product>();
+}
+
+<style>
+    /* Breadcrumb */
+    .breadcrumb-nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: #777;
+        margin-bottom: 24px;
+    }
+
+        .breadcrumb-nav a {
+            color: #111;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+            .breadcrumb-nav a:hover {
+                color: #e50914;
+            }
+
+    /* Product Details Container */
+    .details-card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 35px;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.04);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 40px;
+    }
+
+    /* Left: Product Image Box */
+    .details-image-box {
+        background: #f7f7f8;
+        border-radius: 16px;
+        overflow: hidden;
+        height: 420px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+        .details-image-box img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+    .details-category-badge {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        background: rgba(14, 14, 14, 0.85);
+        color: #fff;
+        padding: 6px 14px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        backdrop-filter: blur(8px);
+    }
+
+    /* Right: Product Info */
+    .details-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+        .details-info h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #111;
+            margin: 0 0 14px;
+            line-height: 1.25;
+        }
+
+    .details-price-row {
+        display: flex;
+        align-items: baseline;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .details-price {
+        font-size: 32px;
+        font-weight: 900;
+        color: #e50914;
+    }
+
+    .stock-indicator {
+        font-size: 12px;
+        font-weight: 700;
+        padding: 5px 12px;
+        border-radius: 8px;
+    }
+
+    .in-stock {
+        background: #e8f7ee;
+        color: #1a8742;
+    }
+
+    .out-stock {
+        background: #fde8e8;
+        color: #e50914;
+    }
+
+    /* Quantity and Actions */
+    .purchase-actions {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-top: 25px;
+        flex-wrap: wrap;
+    }
+
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    .qty-btn {
+        width: 40px;
+        height: 44px;
+        border: none;
+        background: #f5f5f5;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.2s ease;
+    }
+
+        .qty-btn:hover {
+            background: #e0e0e0;
+        }
+
+    .qty-input {
+        width: 50px;
+        height: 44px;
+        border: none;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 700;
+        outline: none;
+    }
+
+    .btn-details-cart {
+        flex: 1;
+        min-width: 180px;
+        height: 46px;
+        background: #e50914;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 6px 20px rgba(229, 9, 20, 0.3);
+    }
+
+        .btn-details-cart:hover {
+            background: #b20710;
+            transform: translateY(-2px);
+        }
+
+        .btn-details-cart:disabled {
+            background: #ccc;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+    /* Feature Highlights */
+    .features-list {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .feature-point {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: #555;
+    }
+
+        .feature-point strong {
+            color: #111;
+        }
+
+    /* Related Products Section */
+    .related-section {
+        margin-top: 40px;
+    }
+
+    .related-title {
+        font-size: 20px;
+        font-weight: 800;
+        margin-bottom: 20px;
+        color: #111;
+    }
+
+    .related-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 18px;
+    }
+
+    .related-card {
+        background: #fff;
+        border-radius: 14px;
+        padding: 14px;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.2s ease;
+    }
+
+        .related-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(229, 9, 20, 0.3);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .related-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 10px;
+            background: #f7f7f8;
+            margin-bottom: 10px;
+        }
+
+        .related-card strong {
+            font-size: 13px;
+            color: #111;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .related-card span {
+            font-size: 14px;
+            font-weight: 800;
+            color: #e50914;
+        }
+
+    @@media (max-width: 900px) {
+        .details-card {
+            grid-template-columns: 1fr;
+            padding: 20px;
+        }
+
+        .details-image-box {
+            height: 300px;
+        }
+    }
+</style>
+
+<!-- Breadcrumb -->
+<div class="breadcrumb-nav">
+    <a href="@Url.Action("Index", "Dashboard")">Home</a>
+    <span>/</span>
+    <a href="@Url.Action("Index", "Product")">Catalog</a>
+    <span>/</span>
+    <span>@Model.ProductName</span>
+</div>
+
+<!-- Main Details Card -->
+<div class="details-card">
+
+    <!-- Image -->
+    <div class="details-image-box">
+        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+        {
+            <img src="@Url.Content(Model.ImageUrl)" alt="@Model.ProductName"
+                 onerror="this.onerror=null;this.parentElement.innerHTML='<div style=\'color:#999;font-weight:600;\'>Image Not Available</div>';" />
+        }
+        else
+        {
+            <div style="color:#999;font-weight:600;">Image Not Available</div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.Category))
+        {
+            <span class="details-category-badge">@Model.Category</span>
+        }
+    </div>
+
+    <!-- Info -->
+    <div class="details-info">
+        <h1>@Model.ProductName</h1>
+
+        <div class="details-price-row">
+            <span class="details-price">&#8377;@Model.Price.ToString("N2")</span>
+
+            @if (Model.StockQuantity > 0)
+            {
+                <span class="stock-indicator in-stock">In Stock (@Model.StockQuantity units left)</span>
+            }
+            else
+            {
+                <span class="stock-indicator out-stock">Out of Stock</span>
+            }
+        </div>
+
+        <div class="purchase-actions">
+            @if (Model.StockQuantity > 0)
+            {
+                <div class="quantity-control">
+                    <button type="button" class="qty-btn" onclick="decreaseQty()">-</button>
+                    <input type="number" id="purchaseQty" class="qty-input" value="1" min="1" max="@Model.StockQuantity" readonly />
+                    <button type="button" class="qty-btn" onclick="increaseQty(@Model.StockQuantity)">+</button>
+                </div>
+
+                <button type="button" class="btn-details-cart" onclick="alert('Adding ' + document.getElementById('purchaseQty').value + ' item(s) to Cart! (Cart backend coming next)');">
+                    Add to Cart
+                </button>
+            }
+            else
+            {
+                <button type="button" class="btn-details-cart" disabled>
+                    Currently Unavailable
+                </button>
+            }
+            @using (Html.BeginForm("Add", "Wishlist", FormMethod.Post, new { style = "display:inline;" }))
+            {
+                <input type="hidden" name="productId" value="@Model.ProductId" />
+                <button type="submit" style="height:46px;padding:0 18px;border-radius:10px;border:1px solid #ddd;background:#fff;cursor:pointer;color:#e50914;font-size:14px;font-weight:700;" title="Save to Wishlist">
+                    &hearts; Wishlist
+                </button>
+            }
+        </div>
+
+        <!-- Trust & Highlights -->
+        <div class="features-list">
+            <div class="feature-point">
+                <span>&#10003;</span>
+                <span><strong>100% Authentic</strong> Quality</span>
+            </div>
+            <div class="feature-point">
+                <span>&#10003;</span>
+                <span><strong>Fast Delivery</strong> Available</span>
+            </div>
+            <div class="feature-point">
+                <span>&#10003;</span>
+                <span><strong>Secure</strong> Transactions</span>
+            </div>
+            <div class="feature-point">
+                <span>&#10003;</span>
+                <span><strong>Easy</strong> Order Tracking</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Related Products (if any) -->
+@if (relatedProducts.Any())
+{
+    <div class="related-section">
+        <h2 class="related-title">Related Products in @Model.Category</h2>
+        <div class="related-grid">
+            @foreach (var item in relatedProducts)
+            {
+                <a href="@Url.Action("Details", "Product", new { id = item.ProductId })" class="related-card">
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        <img src="@Url.Content(item.ImageUrl)" alt="@item.ProductName" />
+                    }
+                    else
+                    {
+                        <div style="height:140px;background:#f7f7f8;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#999;font-size:11px;margin-bottom:10px;">No Image</div>
+                    }
+                    <strong>@item.ProductName</strong>
+                    <span>&#8377;@item.Price.ToString("N2")</span>
+                </a>
+            }
+        </div>
+    </div>
+}
+
+@section scripts {
+    <script>
+                function increaseQty(maxStock) {
+                    var qtyInput = document.getElementById('purchaseQty');
+                    var currentVal = parseInt(qtyInput.value) || 1;
+                    if (currentVal < maxStock) {
+                        qtyInput.value = currentVal + 1;
+                    }
+                }
+
+                function decreaseQty() {
+                    var qtyInput = document.getElementById('purchaseQty');
+                    var currentVal = parseInt(qtyInput.value) || 1;
+                    if (currentVal > 1) {
+                        qtyInput.value = currentVal - 1;
+                    }
+                }
+    </script>
+}

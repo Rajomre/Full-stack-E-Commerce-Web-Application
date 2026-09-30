@@ -1,0 +1,149 @@
+﻿@model Shoping_webapplication_project_.Models.Order
+
+@{
+    ViewBag.Title = "Order Placed Successfully";
+    Layout = "~/Views/Shared/UserDashboardLayout.cshtml";
+}
+
+<style>
+    .success-container {
+        max-width: 650px;
+        margin: 40px auto;
+        background: #fff;
+        border-radius: 24px;
+        padding: 45px 35px;
+        text-align: center;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.05);
+    }
+
+    .success-badge-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: #e8f7ee;
+        color: #1a8742;
+        font-size: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        box-shadow: 0 8px 25px rgba(26, 135, 66, 0.2);
+    }
+
+    .success-container h1 {
+        font-size: 26px;
+        font-weight: 800;
+        color: #111;
+        margin: 0 0 10px;
+    }
+
+    .success-container p {
+        color: #777;
+        font-size: 14px;
+        margin: 0 0 30px;
+    }
+
+    .receipt-box {
+        background: #f8f9fa;
+        border-radius: 16px;
+        padding: 22px;
+        margin-bottom: 30px;
+        text-align: left;
+        border: 1px solid #eee;
+    }
+
+    .receipt-line {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        color: #555;
+        margin-bottom: 10px;
+    }
+
+        .receipt-line:last-child {
+            margin-bottom: 0;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+            font-size: 15px;
+            font-weight: 800;
+            color: #111;
+        }
+
+            .receipt-line:last-child span:last-child {
+                color: #e50914;
+            }
+
+    .success-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    .btn-action-orders {
+        background: #e50914;
+        color: #fff;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: 0.2s ease;
+        box-shadow: 0 6px 20px rgba(229, 9, 20, 0.3);
+    }
+
+        .btn-action-orders:hover {
+            background: #b20710;
+            color: #fff;
+        }
+
+    .btn-action-shop {
+        background: #f0f0f0;
+        color: #222;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+        .btn-action-shop:hover {
+            background: #e0e0e0;
+        }
+</style>
+
+<div class="success-container">
+    <div class="success-badge-icon">&#10003;</div>
+
+    <h1>Thank You For Your Order!</h1>
+    <p>Your order has been placed and recorded into our system.</p>
+
+    <div class="receipt-box">
+        <div class="receipt-line">
+            <span>Order Number:</span>
+            <strong style="color:#111;">@Model.OrderNumber</strong>
+        </div>
+        <div class="receipt-line">
+            <span>Order Date:</span>
+            <span>@Model.OrderDate.ToString("dd MMM yyyy, hh:mm tt")</span>
+        </div>
+        <div class="receipt-line">
+            <span>Status:</span>
+            <span style="color:#e50914;font-weight:700;">@Model.Status</span>
+        </div>
+        <div class="receipt-line">
+            <span>Total Paid Amount:</span>
+            <span>&#8377;@Model.TotalAmount.ToString("N2")</span>
+        </div>
+    </div>
+
+    <div class="success-actions">
+        <a href="@Url.Action("Orders", "Dashboard")" class="btn-action-orders">
+            View in My Orders &#10148;
+        </a>
+        <a href="@Url.Action("Index", "Product")" class="btn-action-shop">
+            Continue Shopping
+        </a>
+    </div>
+</div>

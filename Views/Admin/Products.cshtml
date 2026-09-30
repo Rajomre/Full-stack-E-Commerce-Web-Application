@@ -1,0 +1,521 @@
+﻿@model IEnumerable<Shoping_webapplication_project_.Models.Product>
+
+@{
+    ViewBag.Title = "Products";
+    Layout = "~/Views/Shared/LoginLayout.cshtml";
+}
+
+<style>
+    /* =========================
+       PRODUCT MANAGEMENT
+    ========================= */
+
+    .page-container {
+        padding: 30px;
+        background: #f7f7f7;
+        min-height: calc(100vh - 70px);
+    }
+
+    /* Header */
+    .page-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 25px;
+    }
+
+    .page-header > div {
+        flex: 1;
+    }
+
+    .page-header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+        color: #111;
+    }
+
+    .page-header p {
+        margin: 6px 0 0;
+        color: #777;
+        font-size: 14px;
+    }
+
+    /* Add Product */
+    .add-product-btn {
+        background: #dc3545;
+        color: white;
+        text-decoration: none;
+        padding: 11px 18px;
+        border-radius: 7px;
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+    .add-product-btn:hover {
+        background: #bb2d3b;
+        color: white;
+    }
+
+    /* Dashboard */
+    .back-btn {
+        background: #111;
+        color: white;
+        text-decoration: none;
+        padding: 11px 18px;
+        border-radius: 7px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .back-btn:hover {
+        background: #333;
+        color: white;
+    }
+
+    /* =========================
+       FILTER
+    ========================= */
+
+    .filter-card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .filter-group {
+        display: flex;
+        align-items: flex-end;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .filter-group > div {
+        flex: 1;
+        min-width: 220px;
+    }
+
+    .filter-group label {
+        display: block;
+        margin-bottom: 7px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .filter-group input,
+    .filter-group select {
+        width: 100%;
+        height: 42px;
+        padding: 0 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        outline: none;
+        box-sizing: border-box;
+        font-size: 14px;
+        background: white;
+    }
+
+    .filter-group input:focus,
+    .filter-group select:focus {
+        border-color: #dc3545;
+    }
+
+    .filter-group button {
+        height: 42px;
+        padding: 0 20px;
+        border: none;
+        border-radius: 6px;
+        background: #dc3545;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .filter-group button:hover {
+        background: #bb2d3b;
+    }
+
+    .reset-btn {
+        height: 42px;
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+        color: #555;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .reset-btn:hover {
+        color: #dc3545;
+    }
+
+    /* =========================
+       PRODUCTS CARD
+    ========================= */
+
+    .products-card {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+    }
+
+    .products-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 22px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .products-header h2 {
+        margin: 0;
+        font-size: 20px;
+        color: #111;
+    }
+
+    .count {
+        background: #f1f1f1;
+        color: #555;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    /* =========================
+       TABLE
+    ========================= */
+
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .table-wrapper table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 900px;
+    }
+
+    .table-wrapper th {
+        background: #111;
+        color: #fff;
+        padding: 14px;
+        text-align: left;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .table-wrapper td {
+        padding: 14px;
+        border-bottom: 1px solid #eee;
+        font-size: 14px;
+        color: #444;
+        white-space: nowrap;
+    }
+
+    .table-wrapper tbody tr:hover {
+        background: #fafafa;
+    }
+
+    .table-wrapper strong {
+        color: #111;
+    }
+
+    /* =========================
+       STATUS
+    ========================= */
+
+    .status {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .status.active {
+        background: #e8f7ee;
+        color: #198754;
+    }
+
+    .status.inactive {
+        background: #f8e8e8;
+        color: #dc3545;
+    }
+
+    /* View button */
+    .view-btn {
+        display: inline-block;
+        background: #111;
+        color: white !important;
+        text-decoration: none !important;
+        padding: 7px 13px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .view-btn:hover {
+        background: #333;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @@media (max-width: 768px) {
+
+        .page-container {
+            padding: 20px 15px;
+        }
+
+        .page-header {
+            flex-wrap: wrap;
+        }
+
+        .page-header > div {
+            flex-basis: 100%;
+        }
+
+        .page-header h1 {
+            font-size: 24px;
+        }
+
+        .add-product-btn,
+        .back-btn {
+            padding: 10px 14px;
+        }
+
+        .filter-group {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .filter-group > div {
+            width: 100%;
+        }
+
+        .filter-group button,
+        .reset-btn {
+            width: 100%;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .products-header {
+            padding: 16px;
+        }
+    }
+</style>
+
+
+<div class="page-container">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+
+        <div>
+            <h1>Product Management</h1>
+            <p>Manage products from the database.</p>
+        </div>
+
+        <a href="@Url.Action("AddProduct", "Admin")"
+           class="add-product-btn">
+            + Add Product
+        </a>
+
+        <a href="@Url.Action("Index", "Admin")"
+           class="back-btn">
+            ← Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- SEARCH / FILTER -->
+    <div class="filter-card">
+
+        @using (Html.BeginForm("Products", "Admin", FormMethod.Get))
+        {
+            <div class="filter-group">
+
+                <div>
+                    <label>Search Product</label>
+
+                    <input type="text"
+                           name="search"
+                           value="@ViewBag.Search"
+                           placeholder="Product name or category" />
+                </div>
+
+
+                <div>
+                    <label>Category</label>
+
+                    <select name="category">
+
+                        <option value="All">
+                            All
+                        </option>
+
+                        @foreach (var category in ViewBag.Categories)
+                        {
+                            <option value="@category"
+                                    @(ViewBag.Category == category ? "selected" : "")>
+                                @category
+                            </option>
+                        }
+
+                    </select>
+                </div>
+
+
+                <button type="submit">
+                    Search
+                </button>
+
+
+                <a href="@Url.Action("Products", "Admin")"
+                   class="reset-btn">
+                    Reset
+                </a>
+
+            </div>
+        }
+
+    </div>
+
+
+    <!-- PRODUCTS -->
+    <div class="products-card">
+
+        <div class="products-header">
+
+            <h2>Products</h2>
+
+            <span class="count">
+                @Model.Count() Products
+            </span>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Status</th>
+                        <th>Created At</th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var product in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    @product.ProductId
+                                </td>
+
+
+                                <td>
+                                    <strong>
+                                        @product.ProductName
+                                    </strong>
+                                </td>
+
+
+                                <td>
+                                    @product.Category
+                                </td>
+
+
+                                <td>
+                                    ₹@product.Price.ToString("N2")
+                                </td>
+
+
+                                <td>
+                                    @product.StockQuantity
+                                </td>
+
+
+                                <td>
+
+                                    @if (product.IsActive)
+                                    {
+                                        <span class="status active">
+                                            Active
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status inactive">
+                                            Inactive
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <td>
+                                    @product.CreatedAt.ToString("dd MMM yyyy")
+                                </td>
+
+
+                                <td>
+
+                                    <a href="@Url.Action("ProductDetails", "Admin", new { id = product.ProductId })"
+                                       class="view-btn">
+                                        View
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+
+                            <td colspan="8"
+                                style="text-align:center; padding:40px; color:#777;">
+
+                                No products found.
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

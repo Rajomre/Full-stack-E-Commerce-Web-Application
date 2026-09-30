@@ -1,0 +1,555 @@
+﻿@model Shoping_webapplication_project_.ViewModels.AdminUsersViewModel
+
+@{
+    ViewBag.Title = "User Management";
+    Layout = "~/Views/Shared/LoginLayout.cshtml";
+}
+
+<style>
+    .users-page {
+        padding: 30px;
+        background: #f5f5f5;
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+    }
+
+    .users-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+        .users-header h2 {
+            margin: 0;
+            color: #111;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .users-header p {
+            margin: 6px 0 0;
+            color: #777;
+        }
+
+    .back-btn {
+        background: #111;
+        color: #fff;
+        padding: 10px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+    }
+
+        .back-btn:hover {
+            background: #e00000;
+            color: #fff;
+            text-decoration: none;
+        }
+
+    .filter-card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+    }
+
+    .filter-form {
+        display: flex;
+        gap: 15px;
+        align-items: end;
+        flex-wrap: wrap;
+    }
+
+    .filter-group {
+        flex: 1;
+        min-width: 220px;
+    }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 600;
+            color: #333;
+        }
+
+    .filter-control {
+        width: 100%;
+        padding: 11px 13px;
+        border: 1px solid #ddd;
+        border-radius: 7px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+
+    .search-btn {
+        background: #e00000;
+        color: #fff;
+        border: none;
+        padding: 11px 22px;
+        border-radius: 7px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+        .search-btn:hover {
+            background: #b80000;
+        }
+
+    .reset-btn {
+        background: #222;
+        color: #fff;
+        padding: 11px 22px;
+        border-radius: 7px;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .reset-btn:hover {
+            background: #444;
+            color: #fff;
+            text-decoration: none;
+        }
+
+    .users-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
+
+    .users-card-header {
+        padding: 20px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .users-card-header h3 {
+            margin: 0;
+            font-size: 20px;
+            color: #111;
+        }
+
+    .user-count {
+        background: #e00000;
+        color: #fff;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .users-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .users-table th {
+            background: #111;
+            color: #fff;
+            padding: 14px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .users-table td {
+            padding: 14px;
+            border-bottom: 1px solid #eee;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .users-table tbody tr:hover {
+            background: #fafafa;
+        }
+
+    .role-badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .role-admin {
+        background: #111;
+        color: #fff;
+    }
+
+    .role-user {
+        background: #eee;
+        color: #222;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+        color: #777;
+    }
+
+    @@media (max-width: 768px) {
+        .users-page {
+            padding: 20px 12px;
+        }
+
+        .users-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .filter-form {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .filter-group {
+            width: 100%;
+        }
+    }
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin-top: 25px;
+        flex-wrap: wrap;
+    }
+
+    .page-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 40px;
+        height: 40px;
+        padding: 0 14px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #fff;
+        color: #111;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+        .page-btn:hover {
+            background: #111;
+            color: #fff;
+            border-color: #111;
+        }
+
+        .page-btn.active {
+            background: #e50914;
+            color: #fff;
+            border-color: #e50914;
+            cursor: default;
+        }
+    .status-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+        .status-badge.active {
+            background: #e8f7ee;
+            color: #198754;
+        }
+
+        .status-badge.inactive {
+            background: #f8e8e8;
+            color: #dc3545;
+        }
+    .status-action {
+        border: none;
+        padding: 7px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-left: 5px;
+    }
+
+        .status-action.deactivate {
+            background: #dc3545;
+            color: white;
+        }
+
+        .status-action.activate {
+            background: #198754;
+            color: white;
+        }
+</style>
+
+<div class="users-page">
+
+    <div class="users-header">
+
+        <div>
+            <h2>User Management</h2>
+            <p>Manage registered users from the database.</p>
+        </div>
+
+        <a href="@Url.Action("Index", "Admin")" class="back-btn">
+            ← Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- Search & Filter -->
+
+    <div class="filter-card">
+
+        @using (Html.BeginForm("Users", "Admin", FormMethod.Get))
+        {
+            <div class="filter-form">
+
+                <div class="filter-group">
+                    <label>Search User</label>
+
+                    <input type="text"
+                           name="search"
+                           value="@Model.Search"
+                           class="filter-control"
+                           placeholder="Name, email or phone" />
+                </div>
+
+
+                <div class="filter-group">
+
+                    <label>Role</label>
+
+                    <select name="role" class="filter-control">
+
+                        <option value="All"
+                                @(string.IsNullOrEmpty(Model.Role) || Model.Role == "All" ? "selected" : "")>
+                            All
+                        </option>
+
+                        <option value="User"
+                                @(Model.Role == "User" ? "selected" : "")>
+                            User
+                        </option>
+
+                        <option value="Admin"
+                                @(Model.Role == "Admin" ? "selected" : "")>
+                            Admin
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div>
+                    <button type="submit" class="search-btn">
+                        Search
+                    </button>
+                </div>
+
+
+                <div>
+                    <a href="@Url.Action("Users", "Admin")"
+                       class="reset-btn">
+                        Reset
+                    </a>
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+
+    <!-- Users Table -->
+
+    <div class="users-card">
+
+        <div class="users-card-header">
+
+            <h3>Registered Users</h3>
+
+            <span class="user-count">
+                @Model.Users.Count Users
+            </span>
+
+        </div>
+
+
+        @if (Model.Users != null && Model.Users.Any())
+        {
+            <div class="table-container">
+
+                <table class="users-table">
+
+                  <thead>
+                      <tr>
+                          <th>ID</th>
+                          <th>Full Name</th>
+                          <th>Email</th>
+                          <th>Phone</th>
+                          <th>Role</th>
+                          <th>Status</th>
+                          <th>Created At</th>
+                          <th>Action</th>
+                      </tr>
+                  </thead>
+
+                    <tbody>
+
+                        @foreach (var user in Model.Users)
+                        {
+                            <tr>
+                                <td>@user.UserId</td>
+
+                                <td>@user.FullName</td>
+
+                                <td>@user.Email</td>
+
+                                <td>@user.Phone</td>
+
+                                <td>
+                                    <span class="role-badge">
+                                        @user.Role
+                                    </span>
+                                </td>
+
+                                <td>
+                                    @if (user.IsActive)
+                                    {
+                                        <span class="status-badge active">
+                                            Active
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-badge inactive">
+                                            Inactive
+                                        </span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @user.CreatedAt.ToString("dd MMM yyyy")
+                                </td>
+
+                                <td>
+                                    <a href="@Url.Action("Details", "Admin", new { id = user.UserId })">
+                                        View
+                                    </a>
+
+                                    @using (Html.BeginForm(
+                                        "ToggleUserStatus",
+                                        "Admin",
+                                        new { id = user.UserId },
+                                        FormMethod.Post,
+                                        new { style = "display:inline;" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        if (user.IsActive)
+                                        {
+                                            <button type="submit"
+                                                    class="status-action deactivate"
+                                                    onclick="return confirm('Are you sure you want to deactivate this user?');">
+                                                Deactivate
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit"
+                                                    class="status-action activate">
+                                                Activate
+                                            </button>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        }                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+           if (Model.TotalPages > 1)
+            {
+    <div class="pagination">
+
+        @if (Model.CurrentPage > 1)
+        {
+            <a href="@Url.Action("Users", "Admin", new
+                       {
+                           page = Model.CurrentPage - 1,
+                           search = Model.Search,
+                           role = Model.Role
+                       })"
+               class="page-btn">
+                &laquo; Previous
+            </a>
+        }
+
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            if (i == Model.CurrentPage)
+            {
+                <span class="page-btn active">
+                    @i
+                </span>
+            }
+            else
+            {
+                <a href="@Url.Action("Users", "Admin", new
+                           {
+                               page = i,
+                               search = Model.Search,
+                               role = Model.Role
+                           })"
+                   class="page-btn">
+                    @i
+                </a>
+            }
+        }
+
+        @if (Model.CurrentPage < Model.TotalPages)
+        {
+            <a href="@Url.Action("Users", "Admin", new
+                       {
+                           page = Model.CurrentPage + 1,
+                           search = Model.Search,
+                           role = Model.Role
+                       })"
+               class="page-btn">
+                Next &raquo;
+            </a>
+        }
+        
+
+    </div>
+            }
+        }
+        else
+        {
+            <div class="empty-state">
+
+                <h3>No Users Found</h3>
+
+                <p>
+                    No users match your search or filter.
+                </p>
+
+            </div>
+        }
+
+    </div>
+
+</div>

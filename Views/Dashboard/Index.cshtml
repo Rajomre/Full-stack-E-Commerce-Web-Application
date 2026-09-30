@@ -1,0 +1,422 @@
+﻿@model IEnumerable<Shoping_webapplication_project_.Models.Product>
+
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/UserDashboardLayout.cshtml";
+
+    var fullName = Convert.ToString(Session["FullName"]);
+    var realCategories = ViewBag.RealCategories as List<string> ?? new List<string>();
+}
+
+<style>
+    /* Hero Banner */
+    .user-hero {
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        padding: 40px;
+        background: linear-gradient(135deg, #111111 0%, #1e1e1e 60%, #2a0004 100%);
+        color: #fff;
+        margin-bottom: 30px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .hero-tag {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 20px;
+        background: rgba(229, 9, 20, 0.18);
+        border: 1px solid rgba(229, 9, 20, 0.4);
+        color: #ff3b47;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        margin-bottom: 15px;
+    }
+
+    .user-hero h1 {
+        margin: 0 0 12px;
+        font-size: 36px;
+        font-weight: 800;
+        line-height: 1.1;
+    }
+
+        .user-hero h1 span {
+            color: #e50914;
+        }
+
+    .user-hero p {
+        margin: 0 0 25px;
+        color: #b5b5b5;
+        font-size: 14px;
+        max-width: 520px;
+        line-height: 1.6;
+    }
+
+    .hero-btn-group {
+        display: flex;
+        gap: 12px;
+    }
+
+    .btn-red {
+        background: #e50914;
+        color: #fff;
+        padding: 12px 22px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 700;
+        transition: 0.2s ease;
+        box-shadow: 0 6px 20px rgba(229, 9, 20, 0.35);
+        text-decoration: none;
+    }
+
+        .btn-red:hover {
+            background: #b20710;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+    .btn-outline {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        padding: 12px 22px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        transition: 0.2s ease;
+        text-decoration: none;
+    }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+    /* Section Headers */
+    .section-title-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 30px 0 16px;
+    }
+
+        .section-title-wrap h2 {
+            font-size: 18px;
+            font-weight: 800;
+            color: #111;
+            margin: 0;
+        }
+
+        .section-title-wrap a {
+            color: #e50914;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+    /* Category Cards Grid */
+    .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .category-item {
+        background: #fff;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        border-radius: 16px;
+        padding: 18px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+        transition: all 0.25s ease;
+        text-decoration: none;
+    }
+
+        .category-item:hover {
+            transform: translateY(-3px);
+            border-color: rgba(229, 9, 20, 0.3);
+            box-shadow: 0 8px 25px rgba(229, 9, 20, 0.08);
+        }
+
+        .category-item strong {
+            font-size: 14px;
+            color: #111;
+        }
+
+        .category-item span {
+            font-size: 12px;
+            color: #e50914;
+            font-weight: 700;
+        }
+
+    /* Featured Products Grid */
+    .featured-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 20px;
+    }
+
+    .featured-card {
+        background: #fff;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+        transition: all 0.25s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .featured-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            border-color: rgba(229, 9, 20, 0.2);
+        }
+
+    .featured-img-box {
+        width: 100%;
+        height: 190px;
+        background: #f7f7f8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .featured-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+    .featured-card:hover .featured-img-box img {
+        transform: scale(1.05);
+    }
+
+    .card-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(14, 14, 14, 0.8);
+        color: #fff;
+        padding: 4px 10px;
+        border-radius: 10px;
+        font-size: 10px;
+        font-weight: 700;
+        backdrop-filter: blur(6px);
+    }
+
+    .featured-card-body {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .featured-card-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #111;
+        margin: 0 0 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .featured-card-price-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: auto;
+        padding-top: 10px;
+    }
+
+    .featured-price {
+        font-size: 17px;
+        font-weight: 800;
+        color: #e50914;
+    }
+
+    /* Action Buttons on Card */
+    .featured-actions-row {
+        display: flex;
+        gap: 8px;
+        padding: 0 16px 16px;
+    }
+
+    .btn-card-details {
+        flex: 1;
+        text-align: center;
+        background: #f5f5f5;
+        color: #222;
+        padding: 8px 10px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: 0.2s ease;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+        .btn-card-details:hover {
+            background: #111;
+            color: #fff;
+        }
+
+    .btn-card-cart {
+        flex: 1;
+        background: #e50914;
+        color: #fff;
+        border: none;
+        padding: 8px 10px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+        .btn-card-cart:hover {
+            background: #b20710;
+        }
+
+        .btn-card-cart:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+    .no-products-msg {
+        background: #fff;
+        border: 1px dashed #ddd;
+        border-radius: 16px;
+        padding: 30px;
+        text-align: center;
+        color: #777;
+        font-size: 13px;
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="user-hero">
+    <div class="hero-tag">PERSONAL SHOPPING SPACE</div>
+    <h1>Welcome back, <span>@(string.IsNullOrEmpty(fullName) ? "Customer" : fullName)</span></h1>
+    <p>Explore our latest product catalog, check ongoing orders, and discover items tailored for you.</p>
+    <div class="hero-btn-group">
+        <a href="@Url.Action("Index", "Product")" class="btn-red">Browse All Products →</a>
+        <a href="@Url.Action("Orders", "Dashboard")" class="btn-outline">My Orders</a>
+    </div>
+</div>
+
+<!-- Shop by Category (Dyanmic Real Categories from Database) -->
+<div class="section-title-wrap">
+    <h2>Shop By Category</h2>
+    <a href="@Url.Action("Index", "Product")">View All Catalog →</a>
+</div>
+
+<div class="category-grid">
+    @if (realCategories.Any())
+    {
+        foreach (var cat in realCategories)
+        {
+            <a href="@Url.Action("Index", "Product", new { category = cat })" class="category-item">
+                <strong>@cat</strong>
+                <span>Explore &rarr;</span>
+            </a>
+        }
+    }
+    else
+    {
+        <a href="@Url.Action("Index", "Product")" class="category-item">
+            <strong>All Products</strong>
+            <span>Explore &rarr;</span>
+        </a>
+    }
+</div>
+
+<!-- Real Featured Products from Database -->
+<div class="section-title-wrap">
+    <h2>Featured Products</h2>
+    <a href="@Url.Action("Index", "Product")">See All Products →</a>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <div class="featured-grid">
+        @foreach (var item in Model)
+        {
+            <div class="featured-card">
+                <div class="featured-img-box">
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        <img src="@Url.Content(item.ImageUrl)" alt="@item.ProductName"
+                             onerror="this.onerror=null;this.parentElement.innerHTML='<div style=\'color:#999;font-size:11px;\'>No Image</div>';" />
+                    }
+                    else
+                    {
+                        <div style="color:#999;font-size:11px;">No Image</div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(item.Category))
+                    {
+                        <span class="card-badge">@item.Category</span>
+                    }
+                </div>
+
+                <div class="featured-card-body">
+                    <h4 class="featured-card-title" title="@item.ProductName">@item.ProductName</h4>
+
+                    <div class="featured-card-price-row">
+                        <span class="featured-price">&#8377;@item.Price.ToString("N2")</span>
+
+                        @if (item.StockQuantity > 0)
+                        {
+                            <span style="font-size:11px;font-weight:700;color:#1a8742;">In Stock</span>
+                        }
+                        else
+                        {
+                            <span style="font-size:11px;font-weight:700;color:#e50914;">Out of Stock</span>
+                        }
+                    </div>
+                </div>
+
+                <!-- Action Buttons: Details + Direct Add to Cart -->
+                <div class="featured-actions-row">
+                    <a href="@Url.Action("Details", "Product", new { id = item.ProductId })" class="btn-card-details">
+                        Details
+                    </a>
+
+                    @if (item.StockQuantity > 0)
+                    {
+                        using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post, new { style = "flex:1;" }))
+                        {
+                            <input type="hidden" name="productId" value="@item.ProductId" />
+                            <input type="hidden" name="quantity" value="1" />
+                            <button type="submit" class="btn-card-cart">
+                                + Cart
+                            </button>
+                        }
+                    }
+                    else
+                    {
+                        <button type="button" class="btn-card-cart" disabled>
+                            Sold Out
+                        </button>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="no-products-msg">
+        <p>No products available right now.</p>
+        <a href="@Url.Action("Index", "Product")" class="btn-red" style="display:inline-block;padding:8px 16px;font-size:12px;">Browse Catalog</a>
+    </div>
+}

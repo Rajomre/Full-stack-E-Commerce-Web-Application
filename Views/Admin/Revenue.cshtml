@@ -1,0 +1,358 @@
+﻿@model IEnumerable<Shoping_webapplication_project_.Models.Order>
+
+@{
+    ViewBag.Title = "Revenue";
+    Layout = "~/Views/Shared/LoginLayout.cshtml";
+}
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        background: #f5f6f8;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: #151515;
+    }
+
+    .revenue-page {
+        padding: 30px 32px;
+    }
+
+    .revenue-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+        .revenue-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .revenue-header p {
+            margin: 5px 0 0;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+    .back-btn {
+        padding: 10px 16px;
+        border-radius: 8px;
+        background: #151515;
+        color: white;
+        text-decoration: none;
+        font-size: 13px;
+    }
+
+        .back-btn:hover {
+            background: #e53935;
+            color: white;
+        }
+
+    .revenue-cards {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 25px;
+    }
+
+    .revenue-card {
+        background: white;
+        border: 1px solid #e8e8e8;
+        border-radius: 12px;
+        padding: 20px;
+    }
+
+    .revenue-card-title {
+        color: #6b7280;
+        font-size: 12px;
+        margin-bottom: 10px;
+    }
+
+    .revenue-card-value {
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .total {
+        color: #e53935;
+    }
+
+    .delivered {
+        color: #198754;
+    }
+
+    .pending {
+        color: #f59e0b;
+    }
+
+    .processing {
+        color: #2563eb;
+    }
+
+    .revenue-table-card {
+        background: white;
+        border: 1px solid #e8e8e8;
+        border-radius: 12px;
+        padding: 22px;
+    }
+
+    .table-header {
+        margin-bottom: 18px;
+    }
+
+        .table-header h2 {
+            margin: 0;
+            font-size: 17px;
+        }
+
+    .revenue-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .revenue-table th {
+            text-align: left;
+            padding: 13px;
+            background: #f8f8f8;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .revenue-table td {
+            padding: 14px 13px;
+            border-bottom: 1px solid #eeeeee;
+            font-size: 13px;
+        }
+
+    .order-number {
+        font-weight: 600;
+        color: #e53935;
+    }
+
+    .amount {
+        font-weight: 700;
+    }
+
+    .status {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 10px;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        background: #fff7e8;
+        color: #b77900;
+    }
+
+    .status-processing {
+        background: #eef4ff;
+        color: #2563eb;
+    }
+
+    .status-shipped {
+        background: #f3e8ff;
+        color: #7c3aed;
+    }
+
+    .status-delivered {
+        background: #eaf8f0;
+        color: #198754;
+    }
+
+    @@media (max-width: 1000px) {
+        .revenue-cards {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .revenue-cards {
+            grid-template-columns: 1fr;
+        }
+
+        .revenue-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .revenue-table-card {
+            overflow-x: auto;
+        }
+    }
+</style>
+
+<div class="revenue-page">
+
+    <!-- HEADER -->
+
+    <div class="revenue-header">
+
+        <div>
+            <h1>Revenue Overview</h1>
+            <p>Monitor your store revenue and order earnings.</p>
+        </div>
+
+        <a href="@Url.Action("Index", "Admin")" class="back-btn">
+            ← Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- REVENUE CARDS -->
+
+    <div class="revenue-cards">
+
+        <div class="revenue-card">
+            <div class="revenue-card-title">
+                Total Revenue
+            </div>
+
+            <div class="revenue-card-value total">
+                ₹@ViewBag.TotalRevenue.ToString("N2")
+            </div>
+        </div>
+
+
+        <div class="revenue-card">
+            <div class="revenue-card-title">
+                Delivered Revenue
+            </div>
+
+            <div class="revenue-card-value delivered">
+                ₹@ViewBag.DeliveredRevenue.ToString("N2")
+            </div>
+        </div>
+
+
+        <div class="revenue-card">
+            <div class="revenue-card-title">
+                Pending Revenue
+            </div>
+
+            <div class="revenue-card-value pending">
+                ₹@ViewBag.PendingRevenue.ToString("N2")
+            </div>
+        </div>
+
+
+        <div class="revenue-card">
+            <div class="revenue-card-title">
+                Processing Revenue
+            </div>
+
+            <div class="revenue-card-value processing">
+                ₹@ViewBag.ProcessingRevenue.ToString("N2")
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- ORDERS TABLE -->
+
+    <div class="revenue-table-card">
+
+        <div class="table-header">
+            <h2>Revenue by Order</h2>
+        </div>
+
+        <table class="revenue-table">
+
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th>Order Date</th>
+                    <th>Total Amount</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var order in Model)
+                    {
+                        <tr>
+
+                            <td>
+                                <span class="order-number">
+                                    @order.OrderNumber
+                                </span>
+                            </td>
+
+                            <td>
+                                @order.User.FullName
+                            </td>
+
+                            <td>
+
+                                @if (order.Status == "Pending")
+                                {
+                                    <span class="status status-pending">
+                                        Pending
+                                    </span>
+                                }
+                                else if (order.Status == "Processing")
+                                {
+                                    <span class="status status-processing">
+                                        Processing
+                                    </span>
+                                }
+                                else if (order.Status == "Shipped")
+                                {
+                                    <span class="status status-shipped">
+                                        Shipped
+                                    </span>
+                                }
+                                else if (order.Status == "Delivered")
+                                {
+                                    <span class="status status-delivered">
+                                        Delivered
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="status">
+                                        @order.Status
+                                    </span>
+                                }
+
+                            </td>
+
+                            <td>
+                                @order.OrderDate.ToString("dd MMM yyyy")
+                            </td>
+
+                            <td class="amount">
+                                ₹@order.TotalAmount.ToString("N2")
+                            </td>
+
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" style="text-align:center; padding:30px;">
+                            No orders found.
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
